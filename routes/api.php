@@ -20,20 +20,20 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 //Product Routes
 
-Route::get('/products', 'ProductController@index');
-Route::post('/create-product','ProductController@store');
-Route::post('/add-images','ProductController@addProductImages');
-Route::post('/delete-images','ProductController@removeProductImages');
-Route::get('/product/{id}','ProductController@show');
-Route::post('/update-product/{id}','ProductController@update');
-Route::delete('/delete-product/{id}','ProductController@destroy');
+// Route::get('/products', 'ProductController@index');
+// Route::post('/create-product','ProductController@store');
+// Route::post('/add-images','ProductController@addProductImages');
+// Route::post('/delete-images','ProductController@removeProductImages');
+// Route::get('/product/{id}','ProductController@show');
+// Route::post('/update-product/{id}','ProductController@update');
+// Route::delete('/delete-product/{id}','ProductController@destroy');
 
 
 // User Routes
 
-Route::get('/user/{id}','UserController@show');
-Route::post('/report-user','UserController@reportUser');
-Route::post('/comment','UserController@comment');
+// Route::get('/user/{id}','UserController@show');
+// Route::post('/report-user','UserController@reportUser');
+// Route::post('/comment','UserController@comment');
 
 
 //login - logout - register
@@ -45,7 +45,6 @@ Route::post('/logout', 'LoginController@Logout');
 
 //Category routes
 
-Route::get('/categories', 'CategoryController@index'); 
-Route::get('/sub-categories/{id}', 'CategoryController@getSubCategories');
-Route::get('/custom-fields/{id}', 'CategoryController@getAdditionalFields');
-
+// Route::get('/categories', 'CategoryController@index'); 
+// Route::get('/sub-categories/{id}', 'CategoryController@getSubCategories');
+// Route::get('/custom-fields/{id}', 'CategoryController@getAdditionalFields');
