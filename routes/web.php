@@ -14,30 +14,30 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/dashboard', 'AdminController@index');
+// Route::get('/dashboard', 'AdminController@index');
 
-//Categories Routes (Admin panel)
+// //Categories Routes (Admin panel)
 
-Route::get('/categories', 'CategoryController@index');
-Route::get('/categories/create', 'CategoryController@create');
-Route::post('/categories', 'CategoryController@store');
-Route::get('/category/{id}/edit', 'CategoryController@edit');
-Route::post('/update-category', 'CategoryController@update');
-Route::get('/category/{id}/delete', 'CategoryController@destroy');
+// Route::get('/categories', 'CategoryController@index');
+// Route::get('/categories/create', 'CategoryController@create');
+// Route::post('/categories', 'CategoryController@store');
+// Route::get('/category/{id}/edit', 'CategoryController@edit');
+// Route::post('/update-category', 'CategoryController@update');
+// Route::get('/category/{id}/delete', 'CategoryController@destroy');
 
-//Fields Routes (Admin Panel)
+// //Fields Routes (Admin Panel)
 
-Route::get('/fields', 'FieldController@index');
-Route::get('/fields/create', 'FieldController@create');
-Route::post('/fields', 'FieldController@store');
-Route::get('/field/{id}/edit', 'FieldController@edit');
-Route::post('/update-field', 'FieldController@update');
-Route::get('/field/{id}/delete', 'FieldController@destroy');
+// Route::get('/fields', 'FieldController@index');
+// Route::get('/fields/create', 'FieldController@create');
+// Route::post('/fields', 'FieldController@store');
+// Route::get('/field/{id}/edit', 'FieldController@edit');
+// Route::post('/update-field', 'FieldController@update');
+// Route::get('/field/{id}/delete', 'FieldController@destroy');
 
 
-//products routes (Admin panel)
+// //products routes (Admin panel)
 
-Route::get('/products', 'ProductController@index');
-Route::get('/product/{id}/show', 'ProductController@show');
-Route::post('/approve-product/{id}', 'ProductController@approve');
-Route::get('/delete-product/{id}', 'ProductController@index');
+// Route::get('/products', 'ProductController@index');
+// Route::get('/product/{id}/show', 'ProductController@show');
+// Route::post('/approve-product/{id}', 'ProductController@approve');
+// Route::get('/delete-product/{id}', 'ProductController@index');
