@@ -35,14 +35,14 @@ class ResetController extends Controller
                 ->send(new RestPasswordMail("Please Use this Code To Rest Your Password : " . $otp));
 
 
-            $rest = RestPassword::where('user_id', $user->id)->first();
+            $rest = RestPassword::where('user_id', $user->ID)->first();
             if ($rest) {
                 $rest->otp = $otp;
                 $rest->save();
             } else {
                 $new_rest = new RestPassword();
                 $new_rest->otp = $otp;
-                $new_rest->user_id = $user->id;
+                $new_rest->user_id = $user->ID;
                 $new_rest->save();
             }
 

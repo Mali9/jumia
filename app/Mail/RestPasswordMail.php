@@ -31,7 +31,7 @@ class RestPasswordMail extends Mailable
     {
         $msg = $this->msg;
 
-        return $this->subject('موقع المسابقات')
+        return $this->subject('المرصد')
             ->view('mails.forget_password', compact('msg'));
     }
 }

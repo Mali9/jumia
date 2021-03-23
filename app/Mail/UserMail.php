@@ -31,7 +31,7 @@ class UserMail extends Mailable
     {
         $msg = $this->msg;
 
-        return $this->subject('موقع المسابقات')
+        return $this->subject('المرصد')
             ->view('mails.user_mail', compact('msg'));
     }
 }
