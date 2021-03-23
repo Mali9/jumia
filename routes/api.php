@@ -29,6 +29,8 @@ Route::group(
     ['middleware' => 'auth:api'],
     function () {
         Route::get('/posts', 'PostController@index');
+        Route::get('/categories', 'CategoryController@index');
+        Route::get('/my_profile', 'UserController@myProfile');
         Route::post('/logout', 'LoginController@Logout');
     }
 );
