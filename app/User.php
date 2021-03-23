@@ -16,8 +16,12 @@ class User extends Authenticatable
      *
      * @var array
      */
+    public $timestamps = false;
+
+    protected $primaryKey = 'ID';
+    protected $table = 'wp_users';
     protected $fillable = [
-        'name', 'email', 'password', 'image','phone'
+        'ID', 'user_email', 'user_pass'
     ];
 
     /**
@@ -26,26 +30,10 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'user_pass',
     ];
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
-
-    public function follows()
+    public function AauthAcessToken()
     {
-        return $this->morphMany('App\Follow', 'followable');
+        return $this->hasMany('\App\OauthAccessToken');
     }
-    public function followings()
-    {
-        return $this->hasMany(Follow::class,'user_id');
-    }
-    
-    
 }
