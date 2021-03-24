@@ -25,11 +25,20 @@ Route::post('forget/username', 'ResetController@forgetUsername');
 Route::post('/login', 'LoginController@Login')->name('login');
 Route::post('/register', 'LoginController@register');
 
+
+Route::get('/posts', 'PostController@index');
+Route::get('/related_posts', 'PostController@related');
+Route::get('/show_post/{id}', 'PostController@show');
+Route::get('/search', 'PostController@Search');
+Route::get('/posts_by_category', 'PostController@bostsByCategory');
+Route::get('/categories', 'CategoryController@index');
+
+
+
 Route::group(
     ['middleware' => 'auth:api'],
     function () {
-        Route::get('/posts', 'PostController@index');
-        Route::get('/categories', 'CategoryController@index');
+
         Route::get('/my_profile', 'UserController@myProfile');
         Route::post('/logout', 'LoginController@Logout');
     }

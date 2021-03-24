@@ -19,4 +19,9 @@ class Term extends Model
     {
         return $this->belongsTo(Taxonomy::class, 'term_id');
     }
+
+    public function posts()
+    {
+        return $this->hasMany(WpTermRelationship::class, 'term_taxonomy_id');
+    }
 }
