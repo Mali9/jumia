@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Comment;
 use App\User;
 use Arabic\Arabic;
 use Illuminate\Http\Request;
@@ -14,24 +15,6 @@ use App\Product;
 class CommentController extends Controller
 {
 
-     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index($id)
-    {
-        $comments = Product::where('blog_article_id',$id)->get();
-        $count = count($comments);
-        foreach($comments as $comment){
-            $creation_date = Carbon::parse($comment['created_at']);
-            $comment['how_long_ago'] = 'منذ '. Arabic::since($creation_date);
-            $comment['user'] = User::select('id','image','name')->where('id',$comment['user_id'])->first();
-        }
-        
-        $comments['count'] = $count;
-        return response()->json(['data' => $comments],200);
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -41,21 +24,60 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(),[
-            'product_id' => 'required',
-            'comment' => 'required'
-        ]);
 
-        $comment['user_id'] = auth()->guard('api')->id();
-        $comment['product_id'] = $request->product_id;
-        $comment['comment'] = $request->comment;
-        $comment['created_at'] = Carbon::now();
-        DB::table('comments')->insert($comment);
-        $product_owner_id = DB::table('products')->select('user_id')->where('product_id',$request->product_id)->get();
-        $product_owner = User::where('id',$product_owner_id)->first();
-        $new_comment = DB::table('comments')->where('user_id',auth()->guard('api')->id())->latest()->first();
-        $product_owner->notify(new NewComment($new_comment->id, $request->product_id));
-        return response()->json(['data' => 'Commented successfully'], 200);
+        $messages =  [
+            'post_id.required' => 'يجب  أدخال خبر  ',
+            'post_id.exists' => ' الخبر غير موجود ',
+            'comment.required' => 'يجب أدخال  تعليق ',
+
+        ];
+        $validator = Validator::make($request->all(), [
+            'post_id' => 'required|exists:wp_posts,ID',
+            'comment' => 'required'
+        ], $messages);
+
+
+        if ($validator->fails()) {
+            $errors = [];
+            $index = 0;
+
+            foreach ($validator->errors()->getMessages() as $key => $error) {
+                $errors['errors'][$index]['key'] = $key;
+                $errors['errors'][$index]['error'] = $error[0];
+                $index++;
+            }
+
+            return response()->json(['data' => $errors], 400);
+        }
+
+        if (auth()->guard('api')->check()) {
+            $comment = new Comment;
+
+            $comment->comment_post_ID = $request->post_id;
+            $comment->comment_content = $request->comment;
+            $comment->comment_date = Carbon::now();
+            $comment->comment_date_gmt = Carbon::now();
+
+            $comment->comment_author = auth()->guard('api')->user()->user_nicename;
+            $comment->comment_author_email = auth()->guard('api')->user()->user_email;
+            $comment->save();
+            return response()->json(['message' => 'تم التعليق بنجاح', 'data' => $comment], 200);
+        }
+        if ($request->username) {
+            $comment = new Comment;
+
+            $comment->comment_post_ID = $request->post_id;
+            $comment->comment_content = $request->comment;
+            $comment->comment_author = $request->username;
+            $comment->comment_date_gmt = Carbon::now();
+
+            $comment->comment_date = Carbon::now();
+            $comment->save();
+
+            return response()->json(['message' => 'تم التعليق بنجاح', 'data' => $comment], 200);
+        } else {
+            return response()->json(['data' => 'يجب إدخال أسم المستخدم'], 400);
+        }
     }
 
 
@@ -69,12 +91,12 @@ class CommentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'comment' => 'required',
-            'blog_article_id','required'
+            'blog_article_id', 'required'
         ]);
-     
-        if($validator->fails()){
+
+        if ($validator->fails()) {
             return $validator->errors();
         }
 
@@ -96,11 +118,10 @@ class CommentController extends Controller
     public function destroy($id)
     {
         $comment = Articlecomment::findOrFail($id);
-        if($comment->user_id == auth()->guard('api')->id()){
+        if ($comment->user_id == auth()->guard('api')->id()) {
             Articlecomment::destroy($id);
-            return response()->json(['data' => 'deleted successfully'],200);
+            return response()->json(['data' => 'deleted successfully'], 200);
         }
-        return response()->json(['data' => 'Unauthorized'],401);
-
+        return response()->json(['data' => 'Unauthorized'], 401);
     }
 }

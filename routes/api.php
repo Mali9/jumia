@@ -32,6 +32,7 @@ Route::get('/show_post/{id}', 'PostController@show');
 Route::get('/search', 'PostController@Search');
 Route::get('/posts_by_category', 'PostController@bostsByCategory');
 Route::get('/categories', 'CategoryController@index');
+Route::post('/store_comment', 'CommentController@store');
 
 
 
