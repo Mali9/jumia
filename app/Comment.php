@@ -11,5 +11,8 @@ class Comment extends Model
     protected $primaryKey = 'comment_ID';
     protected $table = 'wp_comments';
 
-    
+    public function replies()
+    {
+        return $this->hasMany(Comment::class, 'comment_parent');
+    }
 }
