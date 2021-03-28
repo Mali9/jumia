@@ -15,7 +15,7 @@ class CategoryController extends Controller
     {
         $categories = Term::whereHas('type', function ($q) {
             $q->where('taxonomy', 'category');
-        })->paginate(2);
+        })->paginate(10);
         return response()->json(['data' => $categories], 200);
     }
 
