@@ -8,6 +8,7 @@ class WpTermRelationship extends Model
 {
     public $timestamps = false;
     protected $table = 'wp_term_relationships';
+    protected $connection = 'mysql_new';
 
 
     /**

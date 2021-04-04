@@ -8,6 +8,7 @@ class Taxonomy extends Model
 {
     public $timestamps = false;
     protected $primaryKey = 'term_taxonomy_id';
+    protected $connection = 'mysql_new';
 
     protected $table = 'wp_term_taxonomy';
 

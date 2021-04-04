@@ -11,27 +11,10 @@ class User extends Authenticatable
 {
     use Notifiable, HasApiTokens;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    public $timestamps = false;
+    protected $hidden = ['password', 'remember_token', 'type'];
 
-    protected $primaryKey = 'ID';
-    protected $table = 'wp_users';
-    protected $fillable = [
-        'ID', 'user_email', 'user_pass'
-    ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'user_pass',
-    ];
+    protected $connection = 'mysql';
     public function AauthAcessToken()
     {
         return $this->hasMany('\App\OauthAccessToken');

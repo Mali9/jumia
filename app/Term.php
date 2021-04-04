@@ -8,6 +8,7 @@ class Term extends Model
 {
     public $timestamps = false;
     protected $primaryKey = 'term_id';
+    protected $connection = 'mysql_new';
 
     protected $table = 'wp_terms';
     /**

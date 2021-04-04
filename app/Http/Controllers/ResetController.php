@@ -25,13 +25,13 @@ class ResetController extends Controller
     public function forgetPassword()
     {
         if (request('email')) {
-            $user = User::where('user_email', request('email'))->first();
+            $user = User::where('email', request('email'))->first();
         } else {
-            $user = User::where('user_login', request('username'))->first();
+            $user = User::where('username', request('username'))->first();
         }
         if ($user) {
             $otp = rand(1, 99999);
-            Mail::to($user->user_email)
+            Mail::to($user->email)
                 ->send(new RestPasswordMail("Please Use this Code To Rest Your Password : " . $otp));
 
 
@@ -42,7 +42,7 @@ class ResetController extends Controller
             } else {
                 $new_rest = new RestPassword();
                 $new_rest->otp = $otp;
-                $new_rest->user_id = $user->ID;
+                $new_rest->user_id = $user->id;
                 $new_rest->save();
             }
 
@@ -76,10 +76,10 @@ class ResetController extends Controller
 
         $otp = RestPassword::where('otp', request('otp'))->first();
         if ($otp) {
-            $user = User::where('ID', $otp->user_id)->first();
+            $user = User::where('id', $otp->user_id)->first();
             // return $request['password'];
             // return $this->HashPassword($request['password']);
-            $user->user_pass = $this->HashPassword($request['password']);
+            $user->password = bcrypt($request['password']);
             $user->save();
             $otp->delete();
             return  response()->json(['message' => 'تم تغيير كلمة المرور بنجاح'], 200);

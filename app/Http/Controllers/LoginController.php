@@ -2,35 +2,75 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Traits\PasswordHash;
 
 class LoginController extends Controller
 {
-    use PasswordHash;
-    public function register(Request $request)
+
+    protected $request;
+    protected $user;
+
+    public function __construct(Request $request, User $user)
     {
 
-        $messages =  [
-            'user_login.required' => 'يجب  أدخال أسم المتسخدم ',
-            'user_login.unique' => ' أسم المتسخدم موجود من قبل ',
-            'user_email.required' => 'يجب أدخال البريد الإلكتروني ',
-            'user_email.unique' => ' البريدالإلكتروني موجود من قبل ',
+        $this->request = $request;
+        $this->user = $user;
+    }
 
-            'user_pass.required' => 'يجب  أدخال كلمة المرور ',
-            'user_pass.confirmed' => 'يجب  أن تكون كلمة المرور متطابقة ',
+
+
+    // login function
+    public function login()
+    {
+        $credentials = [
+            'username' => $this->request->username,
+            'password' => $this->request->password,
         ];
-        $validator = Validator::make($request->all(), [
-            'user_login' => 'required|max:255|unique:wp_users,user_login',
-            'user_email' => 'required|email|unique:wp_users,user_email',
-            'password' => 'required|confirmed',
-        ], $messages);
+        $errors = [];
 
+        if (Auth::attempt($credentials)) {
+
+            $token = Auth::user()->createToken('authToken')->accessToken;
+            return response()->json([
+                'token' => $token,
+                'data' => Auth::user(),
+                'code' => 200
+            ], 200);
+        } else {
+
+            if ($this->user->where('username', $this->request->username)->first()) {
+                if ($this->user->where('username', $this->request->username)->where('status', 0)->first()) {
+                    $errors[] = "المستخدم غير مفعل";
+                } else {
+                    $errors[] = "كلمة المرور غير صحيحة";
+                }
+            } else {
+                $errors[] = "أسم المستخدم غير صحيح";
+            }
+            return response()->json([
+                'errors' => $errors,
+                'code' => 400
+            ], 400);
+        }
+    }
+
+    public function register()
+    {
+        // dd(request()->all());
+        $validator = Validator::make(request()->all(), [
+            'fullname' => 'required|max:100',
+            'username' => 'required|unique:users,username',
+            'email' => 'required|max:100|email|unique:users,email',
+            'password' => 'required|min:6|max:100|confirmed',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:10000',
+        ]);
 
 
         if ($validator->fails()) {
@@ -38,51 +78,44 @@ class LoginController extends Controller
             $index = 0;
 
             foreach ($validator->errors()->getMessages() as $key => $error) {
-                $errors['errors'][$index]['key'] = $key;
-                $errors['errors'][$index]['error'] = $error[0];
+                $errors[$index] = $error[0];
                 $index++;
             }
-
-            return response()->json(['data' => $errors], 400);
+            return response()->json(['errors' => $errors], 400);
         }
 
-        $user = new User;
-        $user->user_login = $request['user_login'];
-        $user->user_email = $request['user_email'];
-        $user->user_pass = $this->HashPassword($request['password']);
-        $user->user_registered = Carbon::now();
-        $user->save();
-        $accessToken = $user->createToken('Laravel Password Grant Client')->accessToken;
+        $this->user->username = $this->request->username;
+        $this->user->fullname = $this->request->fullname;
+        $this->user->email = $this->request->email;
+        $this->user->password = bcrypt($this->request->password);
 
-        return response(['msg' => 'تم التسجيل بنجاح', 'user' => $user, 'access_token' => $accessToken]);
-    }
-
-    public function login(Request $request)
-    {
-        $request->validate([
-            'user_login' => 'required',
-            'user_pass' => 'required'
-        ]);
-
-        $user = User::where('user_login', $request->user_login)->first();
-
-        // return $request->except('token');
-
-        if (!$user) {
-            return response(['message' => 'لا يوجد مستخدم بهذا الاسم'], 401);
-        } else {
-            // $password_hashed = $this->HashPassword(trim($request->password));
-            if ($this->CheckPassword($request->user_pass, $user->user_pass)) {
-                $accessToken = $user->createToken('Laravel Password Grant Client')->accessToken;
-
-                // $accessToken = Auth::user()->createToken('authToken')->accessToken;
-                return response(['user' => $user, 'access_token' => $accessToken]);
-            } else {
-                return response(['message' => 'كلمة مرور خاطئة'], 401);
+        if (isset(request()->image) && !empty(request()->image)) {
+            $image_path = 'uploads/users/' . $this->user->image;
+            if (File::exists($image_path)) {
+                File::delete($image_path);
             }
-        }
-    }
 
+            $imageName = Helper::upload_user_image(request()->image);
+            $this->user->image = $imageName;
+        }
+        $this->user->save();
+
+        $credentials = [
+            'email' => request('email'),
+            'password' => request('password'),
+        ];
+
+        auth()->attempt($credentials);
+        $user = Auth::user();
+        $token = auth()->user()->createToken('authToken')->accessToken;
+
+        return response()->json([
+            'message' => 'تم إنشاء المتسخدم بنجاح',
+            'data' => $user,
+            'token' => $token
+        ], 200);
+        // return response()->json(['message' => 'تم إنشاء المتسخدم بنجاح', 'data' => $this->user], 200);
+    }
     public function logout()
     {
         if (Auth::check()) {

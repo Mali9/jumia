@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
+    protected $connection = 'mysql_new';
+
     public $timestamps = false;
 
     protected $primaryKey = 'comment_ID';
