@@ -28,7 +28,7 @@
                             <div class="inner">
                                 <h3>{{$app_users ?? ''}}</h3>
 
-                                <p>عدد مستخدمين الابلكيشن</p>
+                                <p>عدد مستخدمي التطبيق</p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-person-add"></i>
@@ -43,7 +43,7 @@
                             <div class="inner">
                                 <h3>{{$news_users ?? ''}}<sup style="font-size: 20px"></sup></h3>
 
-                                <p>عدد مستخدمين المرصد الأخباري</p>
+                                <p>عدد مستخدمي المرصد الأخباري</p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-stats-bars"></i>
@@ -57,7 +57,7 @@
                         <div class="small-box bg-danger">
                             <div class="inner">
                                 <h3>{{$sport_users ?? ''}}<sup style="font-size: 20px"></sup></h3>
-                                <p>عدد مستخدمين المرصد الرياضي</p>
+                                <p>عدد مستخدمي المرصد الرياضي</p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-pie-graph"></i>
