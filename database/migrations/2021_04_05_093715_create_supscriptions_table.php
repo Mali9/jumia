@@ -13,11 +13,12 @@ class CreateSupscriptionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('supscriptions', function (Blueprint $table) {
+        Schema::create('subscription', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
             $table->integer('package_id');
-            $table->timestamp('expired_at');
+            $table->date('expired_at');
+            $table->date('started_at');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('package_id')->references('id')->on('packages')->onDelete('cascade');
             $table->timestamps();

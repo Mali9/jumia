@@ -50,11 +50,11 @@
 
 
                 <li class="nav-item">
-                    <a href="{{ url('/all-subscription') }}" class="nav-link subscription">
+                    <a href="{{ url('/all-subscriptions') }}" class="nav-link subscription">
                         <i class="nav-icon fa fa-pie-chart"></i>
 
                         <p>
-                            تفاصيل المشتركين
+                            تفاصيل الإشتراكات
                         </p>
                     </a>
                 </li>

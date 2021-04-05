@@ -64,10 +64,13 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Admin'], function () {
 
     //subscriptions 
 
-    Route::get('/all-packages', 'packageController@index');
-    Route::get('/edit_package/{id}', 'packageController@edit');
-    Route::post('/update_package', 'packageController@update');
-    Route::get('/packages/{question_id}', 'packageController@getQuestionpackages');
+
+    Route::get('/all-subscriptions', 'SubscriptionController@index');
+    Route::get('/edit_subscription/{id}', 'SubscriptionController@edit');
+    Route::get('/add_subscription', 'SubscriptionController@create');
+    Route::post('/store_subscription', 'SubscriptionController@store');
+    Route::post('/update_subscription', 'SubscriptionController@update');
+    Route::get('/delete_subscription/{id}', 'SubscriptionControllers@delete');
 
 
 
