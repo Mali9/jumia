@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Answer;
+use App\Comment;
 use App\Competition;
 use App\Complaint;
 use App\Country;
@@ -12,6 +13,11 @@ use App\Question;
 use App\User;
 use App\Violation;
 use App\Helpers\Helper;
+use App\NewsUser;
+use App\Post;
+use App\Sport_Models\Comment as Sport_ModelsComment;
+use App\Sport_Models\Post as Sport_ModelsPost;
+use App\Sport_Models\User as Sport_ModelsUser;
 
 class AdminController extends Controller
 {
@@ -27,19 +33,25 @@ class AdminController extends Controller
 
     public function index()
     {
-        // $users = $this->user->where('type', 'user')->count();
-        // $best_earned = $this->user->whereRaw('credit = (select max(`credit`) from users)')->first();
-        // $complaints = Complaint::count();
-        // $questions = Question::count();
-        // $violations = Violation::count();
-        // $total_earned_today  = Competition::whereDate('created_at', \Carbon\Carbon::today())->get()->Sum('total_earned');
-        // $total_users_credits = $this->user->where('type', 'user')->get()->Sum('credit');
-        // // dd($total_users_credits);
-        // $males = $this->user->where('type', 'user')->where('gender', 'male')->count();
-        // $females = $this->user->where('type', 'user')->where('gender', 'female')->count();
-        // $countries_ids = $this->user->where('type', 'user')->get()->unique('country_id')->pluck('country_id')->toArray();
+        $news_users = NewsUser::count();
+        $sport_users = Sport_ModelsUser::count();
+        $app_users = User::count();
 
-        // $countries = Country::whereIn('id', $countries_ids)->count();
-        return view('admin.index');
+        $news_post = Post::count();
+        $sport_post = Sport_ModelsPost::count();
+
+        $news_comments = Comment::count();
+        $sport_comments = Sport_ModelsComment::count();
+
+        return view('admin.index', compact(
+            'news_users',
+            'sport_users',
+            'app_users',
+            'news_post',
+            'sport_post',
+            'news_comments',
+            'sport_comments'
+
+        ));
     }
 }

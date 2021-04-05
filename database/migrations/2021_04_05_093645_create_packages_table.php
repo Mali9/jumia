@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSiteSettingsTable extends Migration
+class CreatePackagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class CreateSiteSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('site_settings', function (Blueprint $table) {
+        Schema::create('packages', function (Blueprint $table) {
             $table->id();
-            $table->float('browsing_duration')->default(6);
-            $table->text('bob_up_text')->default('bob_up_text');
+            $table->string('name', 255);
+            $table->text('description')->nullable();
+            $table->float('price');
+            $table->integer('duration');
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ class CreateSiteSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('site_settings');
+        Schema::dropIfExists('packages');
     }
 }

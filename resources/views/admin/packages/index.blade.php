@@ -3,14 +3,14 @@
 @section('content')
 
 
-@include('admin.users.partial.partial')
+@include('admin.packages.partial.partial')
 
 @section('scripts')
 <!-- Bootstrap 4 -->
 <script src="{{ asset('') }}admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    $(".users").addClass('active');
+    $(".packages").addClass('active');
 
         var keyword = '';
         $('#search').keyup(function() {
@@ -26,7 +26,7 @@
 
         function fetch_data(page) {
             keyword = $.trim(keyword);
-            var url = "/all-users";
+            var url = "/all-packages";
             var url = url + '?keyword=' + keyword + '&page=' + page;
             $.ajax({
                 type: "GET",

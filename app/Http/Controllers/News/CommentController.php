@@ -27,6 +27,7 @@ class CommentController extends Controller
     public function store(Request $request)
     {
 
+        // return auth()->user();
         $messages =  [
             'post_id.required' => ' يجب  أختيار خبر موجود  ',
             'post_id.exists' => ' الخبر غير موجود ',
@@ -60,8 +61,8 @@ class CommentController extends Controller
             $comment->comment_date = Carbon::now();
             $comment->comment_date_gmt = Carbon::now();
 
-            $comment->comment_author = auth()->user()->user_nicename;
-            $comment->comment_author_email = auth()->user()->user_email;
+            $comment->comment_author = auth()->user()->username;
+            $comment->comment_author_email = auth()->user()->email;
             $comment->save();
             return response()->json(['message' => 'تم التعليق بنجاح', 'data' => $comment], 200);
         }
@@ -121,8 +122,8 @@ class CommentController extends Controller
             $comment->comment_date = Carbon::now();
             $comment->comment_date_gmt = Carbon::now();
 
-            $comment->comment_author = auth()->user()->user_nicename;
-            $comment->comment_author_email = auth()->user()->user_email;
+            $comment->comment_author = auth()->user()->username;
+            $comment->comment_author_email = auth()->user()->email;
             $comment->save();
             return response()->json(['message' => 'تم التعليق بنجاح', 'data' => $comment], 200);
         }

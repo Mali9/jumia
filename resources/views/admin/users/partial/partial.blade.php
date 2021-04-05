@@ -16,21 +16,15 @@
 
                         <th> الاسم الكامل</th>
                         <th>الاسم</th>
-                        <th>البلد</th>
                         <th>الصورة</th>
                         <th>البريد الالكتروني</th>
-                        <th>الجوال</th>
-                        <th>الجنس</th>
-                        <th>النوع</th>
                         <th>الحالة</th>
-                        <th>تاريخ الاشتراك</th>
                         <th>التحكم</th>
                         @foreach ($users as $user)
                         <tr>
                             <td>{{ $user->id }}</td>
                             <td>{{ $user->fullname }}</td>
                             <td>{{ $user->username }}</td>
-                            <td>{{ $user->country->name ?? '' }}</td>
                             <td>
                                 @if (!empty($user->image))
                                 <img src="{{ $user->image }}" height="150" width="200">
@@ -41,17 +35,7 @@
 
                             </td>
                             <td>{{ $user->email }}</td>
-                            <td>{{ $user->phone }}</td>
-                            <td>{{ $user->gender == 'male' ? 'ذكر' : 'أنثى' }}</td>
-                            <td>
-                                @if ($user->type == 'user')
-                                متسابق
-                                @elseif($user->type == 'admin')
-                                مدير نظام
-                                @else
-                                مشرف
-                                @endif
-                            </td>
+
                             <td>
                                 @if ($user->status == 1)
                                 <span class="badge badge-success">نشط</span>
@@ -59,9 +43,7 @@
                                 <span class="badge badge-danger">غير نشط</span>
                                 @endif
                             </td>
-                            <td>
-                                {{ $user->created_at }}
-                            </td>
+
                             <td>
                                 <table class="table table-bordered">
                                     <tr>

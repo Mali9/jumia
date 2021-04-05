@@ -19,22 +19,21 @@
         <div class="col-md-12 ">
             <div class="card">
                 <div class="card-hewithdrawaler">
-                    <h3 class="card-title">إحصائيات الموقع</h3>
+                    <h2 class="card-title">إحصائيات المرصد</h2><br>
                 </div>
                 <div class="row">
                     <div class="col-lg-3 col-6">
                         <!-- small box -->
                         <div class="small-box bg-info">
                             <div class="inner">
-                                <h3>{{$countries ?? ''}}</h3>
+                                <h3>{{$app_users ?? ''}}</h3>
 
-                                <p>عدد البلدان المشتركة</p>
+                                <p>عدد مستخدمين الابلكيشن</p>
                             </div>
                             <div class="icon">
-                                <i class="ion ion-bag"></i>
+                                <i class="ion ion-person-add"></i>
                             </div>
-                            <a href="{{url('')}}/all-countries" class="small-box-footer">كل البلدان<i
-                                    class="fa fa-arrow-circle-left"></i></a>
+
                         </div>
                     </div>
                     <!-- ./col -->
@@ -42,15 +41,14 @@
                         <!-- small box -->
                         <div class="small-box bg-success">
                             <div class="inner">
-                                <h3>{{$males ?? ''}}<sup style="font-size: 20px"></sup></h3>
+                                <h3>{{$news_users ?? ''}}<sup style="font-size: 20px"></sup></h3>
 
-                                <p>عدد المشتركين الذكور</p>
+                                <p>عدد مستخدمين المرصد الأخباري</p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-stats-bars"></i>
                             </div>
-                            <a href="{{url('/all-competitors','males')}}" class="small-box-footer">كل الذكور<i
-                                    class="fa fa-arrow-circle-left"></i></a>
+
                         </div>
                     </div>
 
@@ -58,33 +56,30 @@
                         <!-- small box -->
                         <div class="small-box bg-danger">
                             <div class="inner">
-                                <h3>{{$females ?? ''}}</h3>
-                                <p>عدد المشتركين الإناث</p>
+                                <h3>{{$sport_users ?? ''}}<sup style="font-size: 20px"></sup></h3>
+                                <p>عدد مستخدمين المرصد الرياضي</p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-pie-graph"></i>
                             </div>
-                            <a href="{{url('/all-competitors','females')}}" class="small-box-footer">كل الإناث<i
-                                    class="fa fa-arrow-circle-left"></i></a>
+
                         </div>
                     </div>
-                    <!-- ./col -->
+
                     <div class="col-lg-3 col-6">
                         <!-- small box -->
                         <div class="small-box bg-warning">
                             <div class="inner">
-                                <h3>{{$users ?? ''}}</h3>
-
-                                <p>عدد المتسابقين</p>
+                                <h3 style="color: white">{{$sport_post ?? ''}}<sup style="font-size: 20px"></sup></h3>
+                                <p style="color: white">عدد أخبار المرصد الرياضي</p>
                             </div>
                             <div class="icon">
-                                <i class="ion ion-person-add"></i>
+                                <i class="ion ion-pie-graph"></i>
                             </div>
-                            <a href="{{url('')}}/all-competitors" class="small-box-footer">كل المتسابقين<i
-                                    class="fa fa-arrow-circle-left"></i></a>
+
                         </div>
                     </div>
-                    <!-- ./col -->
+
 
 
 
@@ -92,14 +87,12 @@
                         <!-- small box -->
                         <div class="small-box bg-info">
                             <div class="inner">
-                                <h3 style="margin-bottom: 15px">{{$best_earned->credit ?? ''}}</h3>
+                                <h3>{{$news_post ?? ''}}</h3>
 
-                                <h4>{{$best_earned->username ?? ''}}</h>
-
-                                    <p>أعلى المشتركين قيمة</p>
+                                <p>عدد أخبار المرصد الأخباري </p>
                             </div>
                             <div class="icon">
-                                <i class="ion ion-bag"></i>
+                                <i class="ion ion-person-add"></i>
                             </div>
 
                         </div>
@@ -109,15 +102,14 @@
                         <!-- small box -->
                         <div class="small-box bg-success">
                             <div class="inner">
-                                <h3>{{$violations ?? ''}}<sup style="font-size: 20px"></sup></h3>
+                                <h3>{{$news_comments ?? ''}}<sup style="font-size: 20px"></sup></h3>
 
-                                <p>عدد المخالفات</p>
+                                <p>عدد تعليقات المرصد الأخباري</p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-stats-bars"></i>
                             </div>
-                            <a href="{{url('')}}/all-violations" class="small-box-footer">كل المخالفات<i
-                                    class="fa fa-arrow-circle-left"></i></a>
+
                         </div>
                     </div>
 
@@ -125,66 +117,30 @@
                         <!-- small box -->
                         <div class="small-box bg-danger">
                             <div class="inner">
-                                <h3>{{$complaints ?? ''}}</h3>
-                                <p>عدد الشكاوى</p>
+                                <h3>{{$sport_comments ?? ''}}<sup style="font-size: 20px"></sup></h3>
+                                <p>عدد تعليقات المرصد الرياضي</p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-pie-graph"></i>
                             </div>
-                            <a href="{{url('')}}/all-complaints" class="small-box-footer">كل الشكاوى<i
-                                    class="fa fa-arrow-circle-left"></i></a>
+
                         </div>
                     </div>
-                    <!-- ./col -->
+
                     <div class="col-lg-3 col-6">
                         <!-- small box -->
                         <div class="small-box bg-warning">
                             <div class="inner">
-                                <h3>{{$total_earned_today ?? ''}}</h3>
-
-                                <p>الرصيد العام المكتسب لليوم</p>
+                                <h3 style="color: white">{{$subscripers ?? 0}}<sup style="font-size: 20px"></sup></h3>
+                                <p style="color: white">عدد المشتركين</p>
                             </div>
                             <div class="icon">
-                                <i class="ion ion-person-add"></i>
+                                <i class="ion ion-pie-graph"></i>
                             </div>
-                            <a href="{{url('')}}/all-competitors-credits" class="small-box-footer">كل أرصدة المتسابقين<i
-                                    class="fa fa-arrow-circle-left"></i></a>
+
                         </div>
                     </div>
-
-                    <div class="col-lg-3 col-6">
-                        <!-- small box -->
-                        <div class="small-box bg-info">
-                            <div class="inner">
-                                <h3>{{$questions ?? ''}}</h3>
-
-                                <p>إجمالي عدد الأسئلة </p>
-                            </div>
-                            <div class="icon">
-                                <i class="ion ion-person-add"></i>
-                            </div>
-                            <a href="{{ url('/all-questions') }}" class="small-box-footer">كل الأسئلة
-                                <i class="fa fa-arrow-circle-left"></i></a>
-                        </div>
-                    </div>
-
-
-                    <div class="col-lg-3 col-6">
-                        <!-- small box -->
-                        <div class="small-box bg-success">
-                            <div class="inner">
-                                <h3>{{$total_users_credits ?? ''}}</h3>
-
-                                <p>إجمالي رصيد المشتركين</p>
-                            </div>
-                            <div class="icon">
-                                <i class="ion ion-person-add"></i>
-                            </div>
-                            <a href="{{ url('/all-competitors-credits') }}" class="small-box-footer">كل أرصدة
-                                المتسابقين<i class="fa fa-arrow-circle-left"></i></a>
-                        </div>
-                    </div>
-
+                    <!-- ./col -->
 
                 </div>
             </div>

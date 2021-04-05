@@ -1,9 +1,9 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="{{ url('/dashboard') }}" class="brand-link">
-        <img src="{{ auth()->user()->image }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-            style="opacity: .8">
-        <span class="brand-text font-weight-light">لوحة التحكم</span>
+        <img src="{{ auth()->guard('web')->user()->image }}" alt="AdminLTE Logo"
+            class="brand-image img-circle elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light">{{ auth()->guard('web')->user()->fullname }}</span>
     </a>
 
     <!-- Sidebar -->
@@ -15,7 +15,7 @@
                       <img src="{{ Auth::user()->image }}" class="img-circle elevation-2" alt="User Image">
             </div> --}}
             <div class="info">
-                <a href="#" class="d-block">{{ auth()->user()->fullname }}</a>
+                <a href="/dashboard" class="d-block">لوحة التحكم</a>
             </div>
         </div>
 
@@ -32,188 +32,43 @@
                         <i class="nav-icon fa fa-pie-chart"></i>
 
                         <p>
-                            صلاحيات لوحة التحكم
-                        </p>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ url('/all-competitors') }}" class="nav-link competitors">
-                        <i class="nav-icon fa fa-pie-chart"></i>
-
-                        <p>
-                            سجل المشتركين
+                            كل المستخدمين
                         </p>
                     </a>
                 </li>
 
 
                 <li class="nav-item">
-                    <a href="{{ url('/all-rooms') }}" class="nav-link rooms">
+                    <a href="{{ url('/all-packages') }}" class="nav-link packages">
                         <i class="nav-icon fa fa-pie-chart"></i>
 
-                        سجل الغرف
                         <p>
+                            كل الباقات
                         </p>
                     </a>
                 </li>
 
 
                 <li class="nav-item">
-                    <a href="{{ url('/all-competitions') }}" class="nav-link competitions">
-                        <i class="nav-icon fa fa-pie-chart"></i>
-
-                        سجل المسابقات
-                        <p>
-                        </p>
-                    </a>
-                </li>
-
-
-                <li class="nav-item">
-                    <a href="{{ url('/all-competitors-credits') }}" class="nav-link competitors-credits">
-                        <i class="nav-icon fa fa-pie-chart"></i>
-
-                        <p> الأرصدة العامة للمشتركين </p>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ url('/all-transfers') }}" class="nav-link transfers">
+                    <a href="{{ url('/all-subscription') }}" class="nav-link subscription">
                         <i class="nav-icon fa fa-pie-chart"></i>
 
                         <p>
-                            التحويلات بين
-                            المشتركين </p>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ url('/all-withdrawals') }}" class="nav-link withdrawals">
-                        <i class="nav-icon fa fa-pie-chart"></i>
-
-                        <p>
-                            سحوبات المشتركين </p>
-                    </a>
-                </li>
-
-
-
-                <li class="nav-item">
-                    <a href="{{ url('/all-credit-cards') }}" class="nav-link credit_cards">
-                        <i class="nav-icon fa fa-pie-chart"></i>
-
-                        <p>
-                            البيانات البنكية </p>
-                    </a>
-                </li>
-
-
-
-
-
-
-                <li class="nav-item">
-                    <a href="{{ url('/all-questions') }}" class="nav-link questions">
-                        <i class="nav-icon fa fa-pie-chart"></i>
-
-                        <p>
-                            سجل الاسئلة
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ url('/all-answers') }}" class="nav-link answers">
-                        <i class="nav-icon fa fa-pie-chart"></i>
-
-                        <p>
-                            سجل الإجابات
+                            تفاصيل المشتركين
                         </p>
                     </a>
                 </li>
 
 
 
-                <li class="nav-item">
-                    <a href="{{ url('/all-countries') }}" class="nav-link countries">
-                        <i class="nav-icon fa fa-pie-chart"></i>
 
-                        <p>
-                            البلدان
-                        </p>
-                    </a>
-                </li>
-
-
-                <li class="nav-item">
-                    <a href="{{ url('/all-ads') }}" class="nav-link ads">
-                        <i class="nav-icon fa fa-pie-chart"></i>
-
-                        <p>
-                            الإعلانات
-                        </p>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ url('/all-bars') }}" class="nav-link bars">
-                        <i class="nav-icon fa fa-pie-chart"></i>
-
-                        <p>
-                            شريط الأخبار
-                        </p>
-                    </a>
-                </li>
-
-
-                <li class="nav-item">
-                    <a href="{{ url('/all-complaints') }}" class="nav-link complaints">
-                        <i class="nav-icon fa fa-pie-chart"></i>
-
-                        <p>
-                            سجل الشكاوى
-                        </p>
-                    </a>
-                </li>
-
-
-
-                <li class="nav-item">
-                    <a href="{{ url('/all-suggestions') }}" class="nav-link suggestions">
-                        <i class="nav-icon fa fa-pie-chart"></i>
-
-                        <p>
-                            سجل المقترحات
-                        </p>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ url('/all-violations') }}" class="nav-link violations">
-                        <i class="nav-icon fa fa-pie-chart"></i>
-
-                        <p>
-                            سجل المخالفات
-                        </p>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ url('/conditions') }}" class="nav-link conditions">
-                        <i class="nav-icon fa fa-pie-chart"></i>
-
-                        <p>
-                            سجل الشروط والأحكام
-                        </p>
-                    </a>
-                </li>
 
                 <li class="nav-item">
                     <a href="{{ url('/mail_form') }}" class="nav-link mails">
                         <i class="nav-icon fa fa-pie-chart"></i>
 
                         <p>
-                            البريد الالكتروني
+                            كل الإشعارات
                         </p>
                     </a>
                 </li>

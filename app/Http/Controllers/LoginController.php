@@ -32,6 +32,7 @@ class LoginController extends Controller
         $credentials = [
             'username' => $this->request->username,
             'password' => $this->request->password,
+            'status' => 1
         ];
         $errors = [];
 

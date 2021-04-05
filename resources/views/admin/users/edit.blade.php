@@ -65,54 +65,11 @@
                 </div>
 
 
-                <div class="form-group">
-                    <label for="phone" class="col-sm-2 control-label"> الجوال </label>
-
-                    <div class="col-sm-10">
-                        <input type="text" value="{{ $user->phone }}" name="phone" class="form-control" id="phone"
-                            placeholder="الجوال ">
-                        @error('phone')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="gender" class="col-sm-2 control-label"> الجنس </label>
-
-                    <div class="col-sm-10">
-                        <select name="gender" id="gender" class="form-control">
-                            <option value="male" {{ $user->gender == 'male' ? 'selected' : '' }}>ذكر</option>
-                            <option value="female" {{ $user->gender == 'female' ? 'selected' : '' }}>أنثى
-                            </option>
-                        </select>
-                        @error('gender')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
+  
+       
 
 
-
-                <div class="form-group">
-                    <label for="country_id" class="col-sm-2 control-label"> البلد </label>
-
-                    <div class="col-sm-10">
-                        <select name="country_id" id="country_id" class="form-control">
-                            @foreach ($countries as $country)
-                            <option value="{{ $country->id }}"
-                                {{ $user->country_id == $country->id ? 'selected' : '' }}>
-                                {{ $country->name }}
-                            </option>
-                            @endforeach
-
-
-                        </select>
-                        @error('country_id')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
+         
                 <div class="form-group">
                     <label for="image" class="col-sm-2 control-label"> صورة المستخدم </label>
 
@@ -126,70 +83,8 @@
 
 
                 </div>
-                <div class="form-group">
-                    <label for="type" class="col-sm-2 control-label"> نوع المستخدم </label>
-
-                    <div class="col-sm-10">
-                        <select name="type" id="type" class="form-control">
-                            {{-- <option value="user" {{ $user->type == 'user' ? 'selected' : '' }}>مستخدم عادي
-                            </option> --}}
-                            <option value="sub_admin" {{ $user->type == 'sub_admin' ? 'selected' : '' }}>مشرف
-                            </option>
-                            <option value="admin" {{ $user->type == 'admin' ? 'selected' : '' }}>مدير نظام
-                            </option>
-                        </select>
-                        @error('type')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-                <div class="form-group roles" @if ($user->type != 'sub_admin') style="display: none" @endif>
-                    <label for="roles" class="col-sm-2 control-label"> الصلاحيات </label>
-
-                    <div class="col-md-12 form-group mb-3">
-                        <div class="form-group">
-
-                            <div style="margin-top: 15px;margin-bottom: 20px;">
-                                <span style="font-size: 14px;font-style: bold;font-weight: bold;margin-left: 5px">
-                                    تحديد الكل</span>
-                                <input type="checkbox" name="" id="checkAll">
-                            </div>
-                            <div class="row">
-
-
-                                @if ($roles)
-                                @foreach ($roles as $role)
-                                <div class="col-md-2 form-group mb-4">
-
-                                    <label style="width:240px;" class="" for="permisson-{{ $role->id }}">
-                                        {{-- <span> {{ $role->name }}</span>
-                                        --}}
-                                        <input id="permisson-{{ $role->id }}" style="margin-right: 5px" type="checkbox"
-                                            name="roles[]" value="{{ $role->id }}" @if (isset($user))
-                                            @foreach($user->roles as $user_role)
-                                        @if ($role->id == $user_role->id)
-                                        checked
-                                        @endif
-                                        @endforeach
-
-                                        @endif>
-                                        <span> {{ $role->role_name }}</span>
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div>
-
-
-                                @endforeach
-                                @endif
-                            </div>
-
-                        </div>
-                    </div>
-
-
-
-                </div>
-
+          
+           
 
             </div>
             <!-- /.card-body -->
@@ -206,6 +101,7 @@
 @endsection
 @section('scripts')
 <script>
+
     $(".users").addClass('active');
 
         $("#checkAll").click(function() {

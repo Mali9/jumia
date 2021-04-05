@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -22,7 +24,7 @@ class UserController extends Controller
      */
     public function myProfile()
     {
-        // $user = User::findOrFail(request('id'));
+
         return response()->json(['data' => auth()->user()], 200);
     }
 
@@ -31,7 +33,7 @@ class UserController extends Controller
     {
 
 
-        // return (auth()->user()->id);
+        // return (auth()->user());
         $validator = Validator::make(request()->all(), [
             'fullname' => 'required|max:100',
             'username' => 'required|unique:users,username,' . auth()->user()->id,

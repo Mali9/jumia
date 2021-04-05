@@ -52,7 +52,7 @@ class CommentController extends Controller
             return response()->json(['data' => $errors], 400);
         }
 
-        if (auth()->guard('api')->check()) {
+        if (auth()->check()) {
             $comment = new Comment;
 
             $comment->comment_post_ID = $request->post_id;
@@ -60,8 +60,8 @@ class CommentController extends Controller
             $comment->comment_date = Carbon::now();
             $comment->comment_date_gmt = Carbon::now();
 
-            $comment->comment_author = auth()->guard('api')->user()->user_nicename;
-            $comment->comment_author_email = auth()->guard('api')->user()->user_email;
+            $comment->comment_author = auth()->user()->username;
+            $comment->comment_author_email = auth()->user()->email;
             $comment->save();
             return response()->json(['message' => 'تم التعليق بنجاح', 'data' => $comment], 200);
         }
@@ -112,7 +112,7 @@ class CommentController extends Controller
             return response()->json(['data' => $errors], 400);
         }
 
-        if (auth()->guard('api')->check()) {
+        if (auth()->check()) {
             $comment = new Comment;
 
             $comment->comment_post_ID = $request->post_id;
@@ -121,8 +121,8 @@ class CommentController extends Controller
             $comment->comment_date = Carbon::now();
             $comment->comment_date_gmt = Carbon::now();
 
-            $comment->comment_author = auth()->guard('api')->user()->user_nicename;
-            $comment->comment_author_email = auth()->guard('api')->user()->user_email;
+            $comment->comment_author = auth()->user()->username;
+            $comment->comment_author_email = auth()->user()->email;
             $comment->save();
             return response()->json(['message' => 'تم التعليق بنجاح', 'data' => $comment], 200);
         }

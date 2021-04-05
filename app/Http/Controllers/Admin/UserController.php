@@ -23,33 +23,26 @@ class UserController extends Controller
 
     public function index()
     {
-        if (auth()->user()->type != 'admin' && !Helper::checkPermissions('show-users')) {
-            return view('forbidden_page');
-        }
 
         $users = $this->user->query();
         if ($this->request->ajax()) {
             if ($this->request->keyword) {
-                $users = $users->where('username', 'LIKE', '%' . $this->request->keyword . '%')
-                    ->orWhere('fullname', 'LIKE', '%' . $this->request->keyword . '%')
-                    ->orWhere('email', 'LIKE', '%' . $this->request->keyword . '%');
+                $users = $users->where('username', 'LIKE', '%' . $this->request->keyword . '%')->where('type', 'user');
             }
-            $users = $users->admin()->orderBy('id')->paginate(10);
+            $users = $users->orderBy('id')->where('type', 'user')->paginate(10);
+
             return view('admin.users.partial.partial', compact('users'));
         }
-        $users = $users->admin()->orderBy('id')->paginate(10);
+        $users = $users->orderBy('id')->where('type', 'user')->paginate(10);
 
         return view('admin.users.index', compact('users'));
     }
 
     public function create()
     {
-        if (auth()->user()->type != 'admin' && !Helper::checkPermissions('create-users')) {
-            return view('forbidden_page');
-        }
-        $roles = Role::all();
-        $countries = Country::all();
-        return view('admin.users.create', compact('roles', 'countries'));
+
+
+        return view('admin.users.create');
     }
 
     /**
@@ -60,19 +53,13 @@ class UserController extends Controller
      */
     public function store()
     {
-        if (auth()->user()->type != 'admin' && !Helper::checkPermissions('create-users')) {
-            return view('forbidden_page');
-        }
+
         $validator = Validator::make($this->request->all(), [
             'fullname' => 'required',
             'email' => 'required|unique:users,email',
-            'phone' => 'required|unique:users,phone',
-            'type' => 'required|in:admin,sub_admin',
-            'username' => 'required',
-            'password' => 'required',
-            'gender' => 'required',
-            'image' => 'required',
-            'roles' => 'exists:roles,id',
+            'username' => 'required|min:1|max:255',
+            'password' => 'required|min:3|max:255',
+            'image' => 'required|max:10000',
         ]);
         if ($validator->fails()) {
             $errors = [];
@@ -91,20 +78,13 @@ class UserController extends Controller
         $user->fullname = $this->request->fullname;
         $user->username = $this->request->username;
         $user->email = $this->request->email;
-        $user->gender = $this->request->gender;
-        $user->type = $this->request->type;
-        $user->country_id = $this->request->country_id;
-        $user->phone = $this->request->phone;
         $user->password = Hash::make($this->request->password);
         if (isset($this->request->image) && !empty($this->request->image)) {
             $imageName = Helper::upload_user_image($this->request->image);
             $user->image = $imageName;
         }
         $user->save();
-        if (isset($this->request->roles) && $user->type == 'sub_admin') {
 
-            $user->roles()->sync($this->request->roles);
-        }
         if ($user) {
             return redirect('/all-users')->with('success', 'تم إضافة المستخدم بنجاح');
         } else {
@@ -120,13 +100,9 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        if (auth()->user()->type != 'admin' && !Helper::checkPermissions('show-users')) {
-            return view('forbidden_page');
-        }
+
         $user = $this->user->find($id);
-        if ($id == 1 && auth()->user()->id != 1) {
-            return view('forbidden_page');
-        }
+
         return view('admin.users.single_user', compact('user'));
     }
 
@@ -138,17 +114,12 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        if ($id == 1 && auth()->user()->id != 1) {
-            return view('forbidden_page');
-        }
-        if (auth()->user()->type != 'admin' && !Helper::checkPermissions('edit-users')) {
-            return view('forbidden_page');
-        }
-        $countries = Country::all();
 
-        $roles = Role::all();
         $user = User::findOrFail($id);
-        return view('admin.users.edit', compact('user', 'roles', 'countries'));
+        if ($user->type == 'admin') {
+            abort(403);
+        }
+        return view('admin.users.edit', compact('user'));
     }
 
     /**
@@ -160,21 +131,12 @@ class UserController extends Controller
      */
     public function update()
     {
-        if ($this->request->user_id == 1 && auth()->user()->id != 1) {
-            return view('forbidden_page');
-        }
 
-        if (auth()->user()->type != 'admin' && !Helper::checkPermissions('edit-users')) {
-            return view('forbidden_page');
-        }
         $validator = Validator::make($this->request->all(), [
             'fullname' => 'required',
             'email' => 'required|unique:users,email,' . $this->request->user_id,
-            'type' => 'required|in:admin,sub_admin',
             'username' => 'required',
-            'gender' => 'required',
-            'roles' => 'exists:roles,id',
-            'phone' => 'required|unique:users,phone',
+
 
         ]);
         if ($validator->fails()) {
@@ -191,22 +153,19 @@ class UserController extends Controller
 
 
         $user = $this->user->find($this->request->user_id);
+
+        if ($user->type == 'admin') {
+            abort(403);
+        }
+
         $user->fullname = $this->request->fullname;
         $user->username = $this->request->username;
         $user->email = $this->request->email;
-        $user->gender = $this->request->gender;
-        $user->type = $this->request->type;
-        $user->country_id = $this->request->country_id;
-        $user->phone = $this->request->phone;
-
-        if ($user->type != 'sub_admin') {
-            $user->roles()->sync([]);
-        } else {
-            $user->roles()->sync($this->request->roles);
-        }
-        if (isset($this->request->password)) {
+        if (isset($this->request->password) && !empty($this->request->password)) {
             $user->password = Hash::make($this->request->password);
         }
+
+
         if (isset($this->request->image) && !empty($this->request->image)) {
             $imageName = Helper::upload_user_image($this->request->image);
             $user->image = $imageName;
@@ -227,13 +186,11 @@ class UserController extends Controller
      */
     public function delete($id)
     {
-        if ($id == 1) {
-            return view('forbidden_page');
-        }
-        if (auth()->user()->type != 'admin' && !Helper::checkPermissions('delete-users')) {
-            return view('forbidden_page');
-        }
+
         $user = User::findOrFail($id);
+        if ($user->type == 'admin') {
+            abort(403);
+        }
         if ($user->delete()) {
             return redirect()->back()->with('success', 'تم حذف المستخدم بنجاح');
         } else {
@@ -241,20 +198,15 @@ class UserController extends Controller
         }
     }
 
-    public function login_form()
-    {
-        return view('auth.User.login');
-    }
+
 
     public function changeUserStatus($id)
     {
-        if ($id == 1 && auth()->user()->id != 1) {
-            return view('forbidden_page');
-        }
-        if (auth()->user()->type != 'admin' && !Helper::checkPermissions('edit-users')) {
-            return view('forbidden_page');
-        }
+
         $user = User::findOrFail($id);
+        if ($user->type == 'admin') {
+            abort(403);
+        }
         if ($user->status == 0) {
             $user->status = 1;
         } else {
