@@ -37,11 +37,11 @@ class AdminController extends Controller
         $sport_users = Sport_ModelsUser::count();
         $app_users = User::count();
 
-        $news_post = Post::count();
-        $sport_post = Sport_ModelsPost::count();
+        $news_post = Post::where(['post_status' => 'publish', 'post_type' => 'post'])->count();
+        $sport_post = Sport_ModelsPost::where(['post_status' => 'publish', 'post_type' => 'post'])->count();
 
-        $news_comments = Comment::count();
-        $sport_comments = Sport_ModelsComment::count();
+        $news_comments = Comment::where(['comment_approved' => 1, 'comment_type' => 'comment'])->count();
+        $sport_comments = Sport_ModelsComment::where(['comment_approved' => 1, 'comment_type' => 'comment'])->count();
 
         return view('admin.index', compact(
             'news_users',
