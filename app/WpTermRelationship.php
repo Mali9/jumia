@@ -18,6 +18,7 @@ class WpTermRelationship extends Model
      */
     public function post()
     {
-        return $this->belongsTo(Post::class, 'object_id')->select('ID', 'post_date', 'post_content', 'post_title', 'post_name');
+        return $this->belongsTo(Post::class, 'object_id')
+            ->select('ID', 'post_date', 'post_content', 'post_title', 'post_name');
     }
 }

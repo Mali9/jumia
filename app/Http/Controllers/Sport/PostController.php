@@ -20,6 +20,7 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::select('ID', 'post_date', 'post_content', 'post_title', 'post_name')
+            ->where(['post_status' => 'publish', 'post_type' => 'post'])
             ->orderBy('post_date', 'desc')
             ->with(array('view' => function ($query) {
                 $query->select('post_id', 'meta_value');
@@ -37,6 +38,7 @@ class PostController extends Controller
     {
         $posts = Post::select('ID', 'post_date', 'post_content', 'post_title', 'post_name')
             ->where('ID', $id)
+            ->where(['post_status' => 'publish', 'post_type' => 'post'])
             ->orderBy('post_date', 'desc')
             ->with(array('view' => function ($query) {
                 $query->select('post_id', 'meta_value');
@@ -57,6 +59,7 @@ class PostController extends Controller
         }
 
         $posts = Post::select('ID', 'post_date', 'post_content', 'post_title', 'post_name')
+            ->where(['post_status' => 'publish', 'post_type' => 'post'])
             ->where('post_content', 'LIKE', '%' . request('keyword') . '%')
             ->orWhere('post_title', 'LIKE', '%' . request('keyword') . '%')
             ->orderBy('post_date', 'desc')
@@ -74,7 +77,7 @@ class PostController extends Controller
         return response()->json(['message' => 'لا يوجد نتائج بحث'], 400);
     }
 
-    public function bostsByCategory()
+    public function postsByCategory()
     {
         $posts = WpTermRelationship::where('term_taxonomy_id', request('category_id'))
             ->with('post')

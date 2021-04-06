@@ -33,7 +33,7 @@ Route::group(['namespace' => 'News'], function () {
     Route::get('/related_posts', 'PostController@related');
     Route::get('/show_post/{id}', 'PostController@show');
     Route::get('/search', 'PostController@Search');
-    Route::get('/posts_by_category', 'PostController@bostsByCategory');
+    Route::get('/posts_by_category', 'PostController@postsByCategory');
 
     // categories
 
@@ -59,7 +59,7 @@ Route::group(['prefix' => 'sport', 'namespace' => 'Sport'], function () {
     Route::get('/related_posts', 'PostController@related');
     Route::get('/show_post/{id}', 'PostController@show');
     Route::get('/search', 'PostController@Search');
-    Route::get('/posts_by_category', 'PostController@bostsByCategory');
+    Route::get('/posts_by_category', 'PostController@postsByCategory');
 
     // categories
 

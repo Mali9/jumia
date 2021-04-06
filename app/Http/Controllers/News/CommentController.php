@@ -148,7 +148,9 @@ class CommentController extends Controller
 
     public function getReplies()
     {
-        $comment = Comment::where('comment_parent', request('comment_id'))->get();
+        $comment = Comment::where('comment_parent', request('comment_id'))
+            ->where(['comment_approved' => 1, 'comment_type' => 'comment'])
+            ->get();
         return response()->json(['data' => $comment], 200);
     }
 

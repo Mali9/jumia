@@ -16,4 +16,8 @@ class Comment extends Model
     {
         return $this->hasMany(Comment::class, 'comment_parent');
     }
+    public function scopePublish()
+    {
+        return $this->where(['comment_approved' => 1, 'comment_type' => 'comment']);
+    }
 }

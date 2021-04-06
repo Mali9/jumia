@@ -42,4 +42,9 @@ class Post extends Model
     {
         return $this->view->meta_value ?? '';
     }
+
+    public function scopePublish()
+    {
+        return $this->where(['post_status' => 'publish', 'post_type' => 'post']);
+    }
 }
