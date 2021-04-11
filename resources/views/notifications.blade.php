@@ -15,6 +15,17 @@
                 <div class="form-group">
                     {{-- <label for="adName" class="col-sm-2 control-label"> محتوى شريط
                             الأخبار </label> --}}
+                    <div class="form-group">
+                        <label for="title" class="col-sm-2 control-label"> عنوان الإشعار </label>
+
+                        <div class="col-sm-10">
+                            <input type="text" name="title" value="{{ old('title') }}" class="form-control" id="title"
+                                placeholder="عنوان الإشعار ">
+                            @error('title')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
 
                     <div class="card card-info card-outline">
                         <div class="card-header">
@@ -27,7 +38,7 @@
                                     data-toggle="tooltip" title="Collapse">
                                     <i class="fa fa-minus"></i>
                                 </button>
-                      
+
                             </div>
                             <!-- /. tools -->
                         </div>
@@ -55,12 +66,46 @@
 </div>
 
 
+<div class="container-fluid content">
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h3 class="card-title">الإشعارات</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body" style="overflow: scroll;">
+                    <table class="table table-bordered">
+                        <th>عنوان الإشعار</th>
+                        <th>نص الإشعار</th>
+
+
+                        @foreach ($notifications as $notification)
+                        <tr>
+                            <td>{{ $notification->title }}</td>
+
+                            <td>{{ $notification->body }}</td>
+
+                        </tr>
+                        @endforeach
+
+                    </table>
+                </div>
+
+            </div>
+            {{ $notifications->links() }}
+
+        </div>
+    </div>
+</div>
 @endsection
 @section('scripts')
 <script src="{{ asset('admin') }}/plugins/ckeditor/ckeditor.js"></script>
 
 <script>
-    $(".mails").addClass('active');
+    $(".notifications").addClass('active');
 
         $("#checkAll").click(function() {
             $('input:checkbox').not(this).prop('checked', this.checked);

@@ -1,59 +1,98 @@
 @extends('layouts.app')
-
+@section('style')
+<link rel="stylesheet" href="{{asset('admin')}}/plugins/select2/select2.min.css">
+@endsection
 @section('content')
 <div class="col-md-12">
     <!-- Horizontal Form -->
     <div class="card card-info">
         <div class="card-header">
-            <h3 class="card-title">تعديل باقة </h3>
+            <h3 class="card-title">تعديل إشتراك جديد </h3>
         </div>
         <!-- /.card-header -->
         <!-- form start -->
-        <form class="form-horizontal" enctype='multipart/form-data' method="POST" action="{{ url('/update_subscription') }}">
+        <form class="form-horizontal" enctype='multipart/form-data' method="POST"
+            action="{{ url('/update_subscription') }}">
             @csrf
+            <input type="hidden" name="subscription_id" value="{{$subscription->id}}">
             <div class="card-body">
 
-                <input type="hidden" name="subscription_id" value="{{$subscription->id}}">
                 <div class="form-group">
-                    <label for="name" class="col-sm-2 control-label"> اسم الباقة </label>
 
                     <div class="col-sm-10">
-                        <input type="text" name="name" value="{{ $subscription->name ?? '' }}" class="form-control" id="name"
-                            placeholder="اسم الباقة ">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">أختر الباقة</label>
+                            <select name="package_id" id="select2"
+                                class="form-control select2 select2-hidden-accessible" style="width: 100%;"
+                                tabindex="-1" aria-hidden="true" required>
+                                <option value="أختر الباقة"></option>
+                                @foreach ($packages as $package)
+                                <option value="{{ $package->id }}" @if ($subscription->package_id == $package->id)
+                                    selected
+                                    @endif>
+                                    {{ $package->name }}</option>
+                                @endforeach
+                            </select>
+
+                        </div>
                         @error('name')
                         <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
 
+                <div class="col-sm-10">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">أختر المستخدم</label>
+                        <select name="user_id" id="select2" class="form-control select2 select2-hidden-accessible"
+                            style="width: 100%;" tabindex="-1" aria-hidden="true" required>
+                            <option value="أختر الباقة"></option>
+                            @foreach ($users as $user)
+                            <option value="{{ $user->id }}" @if ($subscription->user_id == $user->id)
+                                selected
+                                @endif>
+                                {{ $user->username }}</option>
+                            @endforeach
+                        </select>
 
-                <div class="form-group">
-                    <label for="price" class="col-sm-2 control-label"> السعر </label>
-
-                    <div class="col-sm-10">
-                        <input type="number" step="any" name="price" value="{{ $subscription->price ?? '' }}"
-                            class="form-control" id="price" placeholder="السعر " min="1">
-                        @error('price')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                        @enderror
                     </div>
+                    @error('name')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
 
-                <div class="form-group">
-                    <label for="duration" class="col-sm-2 control-label"> المدة بالشهر </label>
 
-                    <div class="col-sm-10">
-                        <input type="number" step="any" name="duration" value="{{ $subscription->duration ?? '' }}"
-                            class="form-control" id="duration" placeholder="المدة بالشهر " min="1">
-                        @error('duration')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                        @enderror
+
+
+
+                <div class="col-sm-10">
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input id="staff" @if ($subscription->staff)
+                            checked
+                            @endif class="form-check-input" type="checkbox" name="staff" value="true">
+                            <label for="staff" class="form-check-label">عضو دائم</label>
+                        </div>
+
                     </div>
+                    @error('started_at')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
+                {{-- 
+                <div class="col-sm-10">
+                    <div class="form-group">
+                        <label for="expired_at" class="col-sm-2 control-label"> تاريخ الإنتهاء </label>
+
+                        <input class="form-check-input" type="date" name="expired_at" id="expired_at">
+
+                    </div>
+                </div> --}}
 
             </div>
+
 
 
     </div>
@@ -70,6 +109,48 @@
 
 @endsection
 @section('scripts')
+<script src="{{asset('admin')}}/plugins/select2/select2.full.min.js"></script>
+<script>
+    $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
+
+    //Datemask dd/mm/yyyy
+    $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+    //Datemask2 mm/dd/yyyy
+    $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+    //Money Euro
+    $('[data-mask]').inputmask()
+
+    //iCheck for checkbox and radio inputs
+    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+      checkboxClass: 'icheckbox_minimal-blue',
+      radioClass   : 'iradio_minimal-blue'
+    })
+    //Red color scheme for iCheck
+    $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+      checkboxClass: 'icheckbox_minimal-red',
+      radioClass   : 'iradio_minimal-red'
+    })
+    //Flat red color scheme for iCheck
+    $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+      checkboxClass: 'icheckbox_flat-green',
+      radioClass   : 'iradio_flat-green'
+    })
+
+    //Colorpicker
+    $('.my-colorpicker1').colorpicker()
+    //color picker with addon
+    $('.my-colorpicker2').colorpicker()
+
+
+    $('.normal-example').persianDatepicker();
+
+
+
+
+  })
+</script>
 <script>
     $(".subscriptions").addClass('active');
 

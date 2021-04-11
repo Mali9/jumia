@@ -6,6 +6,7 @@ use App\Subscription;
 use App\Http\Controllers\Controller;
 use App\Package;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -52,11 +53,11 @@ class SubscriptionController extends Controller
      */
     public function store()
     {
+        // dd(request()->all());
 
         $validator = Validator::make($this->request->all(), [
-            'price' => 'required|min:1',
-            'duration' => 'required|min:1',
-            'name' => 'required|unique:subscriptions,name',
+            'package_id' => 'required',
+            'user_id' => 'required',
         ]);
         if ($validator->fails()) {
             $errors = [];
@@ -70,11 +71,14 @@ class SubscriptionController extends Controller
             return redirect()->back()->withErrors($validator->errors());
         }
 
+        $package = Package::findOrFail($this->request->package_id);
 
         $subscription = $this->subscription;
-        $subscription->price = $this->request->price;
-        $subscription->duration = $this->request->duration;
-        $subscription->name = $this->request->name;
+        $subscription->user_id = $this->request->user_id;
+        $subscription->package_id = $this->request->package_id;
+        $subscription->staff = $this->request->staff ? 1 : 0;
+        $subscription->started_at = Carbon::now();
+        $subscription->expired_at = Carbon::now()->addDays($package->duration);
 
         $subscription->save();
 
@@ -108,11 +112,13 @@ class SubscriptionController extends Controller
     public function edit($id)
     {
 
+        $users = User::orderBy('id')->where('type', 'user')->get();
+        $packages = Package::orderBy('id')->get();
         $subscription = subscription::findOrFail($id);
         if ($subscription->type == 'admin') {
             abort(403);
         }
-        return view('admin.subscriptions.edit', compact('subscription'));
+        return view('admin.subscriptions.edit', compact('subscription', 'users', 'packages'));
     }
 
     /**
@@ -124,11 +130,11 @@ class SubscriptionController extends Controller
      */
     public function update()
     {
+        // dd(request()->all());
 
         $validator = Validator::make($this->request->all(), [
-            'price' => 'required|min:1',
-            'duration' => 'required|min:1',
-            'name' => 'required|unique:subscriptions,name',
+            'package_id' => 'required',
+            'user_id' => 'required',
         ]);
         if ($validator->fails()) {
             $errors = [];
@@ -146,9 +152,14 @@ class SubscriptionController extends Controller
         $subscription = $this->subscription->find($this->request->subscription_id);
 
 
-        $subscription->price = $this->request->price;
-        $subscription->duration = $this->request->duration;
-        $subscription->name = $this->request->name;
+
+        $package = Package::findOrFail($this->request->package_id);
+
+        $subscription->user_id = $this->request->user_id;
+        $subscription->package_id = $this->request->package_id;
+        $subscription->staff = isset($this->request->staff) ? 1 : 0;
+        $subscription->started_at = Carbon::now();
+        $subscription->expired_at = Carbon::now()->addDays($package->duration);
         $subscription->save();
         if ($subscription) {
             return redirect('/all-subscriptions')->with('success', 'تم تعديل الباقة بنجاح');
@@ -166,7 +177,7 @@ class SubscriptionController extends Controller
     public function delete($id)
     {
 
-        $subscription = subscription::findOrFail($id);
+        $subscription = Subscription::findOrFail($id);
         if ($subscription->type == 'admin') {
             abort(403);
         }
@@ -183,9 +194,7 @@ class SubscriptionController extends Controller
     {
 
         $subscription = subscription::findOrFail($id);
-        if ($subscription->type == 'admin') {
-            abort(403);
-        }
+
         if ($subscription->status == 0) {
             $subscription->status = 1;
         } else {

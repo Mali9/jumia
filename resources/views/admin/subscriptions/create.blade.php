@@ -7,7 +7,7 @@
     <!-- Horizontal Form -->
     <div class="card card-info">
         <div class="card-header">
-            <h3 class="card-title">أضف باقة جديد </h3>
+            <h3 class="card-title">أضف إشتراك جديد </h3>
         </div>
         <!-- /.card-header -->
         <!-- form start -->
@@ -59,8 +59,10 @@
 
                 <div class="col-sm-10">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">تاريخ بدء الإشتراك</label>
-                        <input style="width: 100%;" name="started_at" class="" type="date" required>
+                        <div class="form-check">
+                            <input id="staff" class="form-check-input" type="checkbox" name="staff" value="true">
+                            <label for="staff" class="form-check-label">عضو دائم</label>
+                        </div>
 
                     </div>
                     @error('started_at')
@@ -69,16 +71,7 @@
                 </div>
 
 
-                <div class="col-sm-10">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">تاريخ إنتهاء الإشتراك</label>
-                        <input style="width: 100%;" name="expired_at" class="" type="date" required>
 
-                    </div>
-                    @error('expired_at')
-                    <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
-                </div>
 
             </div>
 

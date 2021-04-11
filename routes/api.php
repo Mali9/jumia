@@ -30,7 +30,7 @@ Route::post('/register', 'LoginController@register');
 
 Route::group(['namespace' => 'News'], function () {
     Route::get('/posts', 'PostController@index');
-    Route::get('/related_posts', 'PostController@related');
+    Route::get('/related_posts', 'PostController@relatedPosts');
     Route::get('/show_post/{id}', 'PostController@show');
     Route::get('/search', 'PostController@Search');
     Route::get('/posts_by_category', 'PostController@postsByCategory');
@@ -67,12 +67,16 @@ Route::group(['prefix' => 'sport', 'namespace' => 'Sport'], function () {
 
 
     // comments routes
-    Route::post('/store_comment', 'CommentController@store')->middleware('auth:api');;
-    Route::post('/store_reply', 'CommentController@storeReply')->middleware('auth:api');;
+    Route::post('/store_comment', 'CommentController@store')->middleware('auth:api');
+    Route::post('/store_reply', 'CommentController@storeReply')->middleware('auth:api');
     Route::get('/comment_replies', 'CommentController@getReplies');
-    Route::post('/like_comment', 'CommentController@likeComment')->middleware('auth:api');;
-    Route::post('/dislike_comment', 'CommentController@disLikeComment')->middleware('auth:api');;
+    Route::post('/like_comment', 'CommentController@likeComment')->middleware('auth:api');
+    Route::post('/dislike_comment', 'CommentController@disLikeComment')->middleware('auth:api');
 });
+
+// packages
+
+Route::get('/all_packages', 'PackageController@index');
 
 
 Route::group(
@@ -81,7 +85,8 @@ Route::group(
 
         Route::get('/my_profile', 'UserController@myProfile');
         Route::post('/update_profile', 'UserController@UpdateProfile');
-
+        Route::post('/subscribe', 'PackageController@Subscribe');
+        Route::get('/my_subscribtions', 'PackageController@mySubscribtions');
         Route::post('/logout', 'LoginController@Logout');
     }
 );

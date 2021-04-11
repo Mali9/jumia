@@ -16,28 +16,41 @@
 
                         <th>اسم المشترك</th>
                         <th>اسم الباقة</th>
+                        <th>مدة الباقة / يوم</th>
                         <th>تاريخ بدء الإشتراك</th>
                         <th>تاريخ إنتهاء الإشتراك</th>
                         <th> حالة الإشتراك</th>
+                        <th> مدة الإشتراك</th>
+                        <th> عضو دائم</th>
 
                         <th>التحكم</th>
                         @foreach ($subscriptions as $subscription)
                         <tr>
                             <td>{{ $subscription->id }}</td>
-                            <td>{{ $subscription->user->name }}</td>
+                            <td>{{ $subscription->user->username }}</td>
                             <td>{{ $subscription->package->name }}</td>
+                            <td>{{ $subscription->package->duration }}</td>
 
-                            <td>{{ $subscription->created_at }}</td>
+                            <td>{{ $subscription->started_at }}</td>
                             <td>{{ $subscription->expired_at }}</td>
 
 
                             <td>
-                                @if ($subscription->expired_at > \Carbon\carbon::now())
-                                <span class="badge badge-danger">منهي</span>
-                                @else
+                                @if ($subscription->status == 1)
                                 <span class="badge badge-success">مفعل</span>
+                                @else
+                                <span class="badge badge-danger">غير مفعل</span>
                                 @endif
                             </td>
+
+                            <td>
+                                @if ($subscription->expired_at > \Carbon\carbon::now())
+                                <span class="badge badge-success">ساري</span>
+                                @else
+                                <span class="badge badge-danger">غير ساري</span>
+                                @endif
+                            </td>
+                            <td>{{ $subscription->staff ? 'نعم' : 'لا' }}</td>
                             <td>
                                 <table class="table table-bordered">
                                     <tr>
@@ -56,6 +69,14 @@
                                                             href="{{ url('/edit_subscription') }}/{{ $subscription->id }}">تعديل</a>
                                                         <a class="dropdown-item delete"
                                                             href="{{ url('/delete_subscription') }}/{{ $subscription->id }}">حذف</a>
+
+                                                        <a class="dropdown-item"
+                                                            href="{{ url('/change_subscription_status') }}/{{ $subscription->id }}">تغيير
+                                                            حالة الإشتراك</a>
+
+                                                        {{-- <a class="dropdown-item"
+                                                            href="{{ url('/change_subscription_status') }}/{{ $subscription->id }}">تمديد
+                                                        الإشتراك</a> --}}
 
 
                                                     </div>

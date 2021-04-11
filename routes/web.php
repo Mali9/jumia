@@ -70,7 +70,8 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Admin'], function () {
     Route::get('/add_subscription', 'SubscriptionController@create');
     Route::post('/store_subscription', 'SubscriptionController@store');
     Route::post('/update_subscription', 'SubscriptionController@update');
-    Route::get('/delete_subscription/{id}', 'SubscriptionControllers@delete');
+    Route::get('/delete_subscription/{id}', 'SubscriptionController@delete');
+    Route::get('/change_subscription_status/{id}', 'SubscriptionController@changesubscriptionStatus');
 
 
 
@@ -80,10 +81,9 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Admin'], function () {
     Route::post('/udpate_conditions', 'ConditionController@update');
 
 
-    // sms emails
+    // notifications
 
-    Route::get('/mail_form', 'UserMailController@mailForm');
-    Route::post('/send_mail', 'UserMailController@sendMail');
+    Route::get('/notifications', 'NotificationController@index');
 
 
     //site settings

@@ -86,7 +86,7 @@ class PostController extends Controller
         return response()->json(['data' => $posts], 200);
     }
 
-    public function related()
+    public function relatedPosts()
     {
         $category = WpTermRelationship::where('object_id', request('post_id'))->first();
         if ($category) {

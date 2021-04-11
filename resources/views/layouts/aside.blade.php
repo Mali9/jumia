@@ -50,7 +50,7 @@
 
 
                 <li class="nav-item">
-                    <a href="{{ url('/all-subscriptions') }}" class="nav-link subscription">
+                    <a href="{{ url('/all-subscriptions') }}" class="nav-link subscriptions">
                         <i class="nav-icon fa fa-pie-chart"></i>
 
                         <p>
@@ -64,7 +64,7 @@
 
 
                 <li class="nav-item">
-                    <a href="{{ url('/mail_form') }}" class="nav-link mails">
+                    <a href="{{ url('/notifications') }}" class="nav-link notifications">
                         <i class="nav-icon fa fa-pie-chart"></i>
 
                         <p>

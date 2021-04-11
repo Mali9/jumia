@@ -19,6 +19,8 @@ class CreateSupscriptionsTable extends Migration
             $table->integer('package_id');
             $table->date('expired_at');
             $table->date('started_at');
+            $table->boolean('staff')->default(0);
+            $table->boolean('status')->default(1);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('package_id')->references('id')->on('packages')->onDelete('cascade');
             $table->timestamps();
