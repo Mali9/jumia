@@ -31,7 +31,7 @@ Route::post('/register', 'LoginController@register');
 Route::group(['namespace' => 'News'], function () {
     Route::get('/posts', 'PostController@index');
     Route::get('/related_posts', 'PostController@relatedPosts');
-    Route::get('/show_post/{id}', 'PostController@show');
+    Route::get('/show_post/{id}/{user_id?}', 'PostController@show');
     Route::get('/search', 'PostController@Search');
     Route::get('/posts_by_category', 'PostController@postsByCategory');
 
@@ -57,7 +57,7 @@ Route::group(['namespace' => 'News'], function () {
 Route::group(['prefix' => 'sport', 'namespace' => 'Sport'], function () {
     Route::get('/posts', 'PostController@index');
     Route::get('/related_posts', 'PostController@related');
-    Route::get('/show_post/{id}', 'PostController@show');
+    Route::get('/show_post/{id}/{user_id?}', 'PostController@show');
     Route::get('/search', 'PostController@Search');
     Route::get('/posts_by_category', 'PostController@postsByCategory');
 

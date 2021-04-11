@@ -77,8 +77,8 @@ class SubscriptionController extends Controller
         $subscription->user_id = $this->request->user_id;
         $subscription->package_id = $this->request->package_id;
         $subscription->staff = $this->request->staff ? 1 : 0;
-        $subscription->started_at = Carbon::now();
-        $subscription->expired_at = Carbon::now()->addDays($package->duration);
+        $subscription->started_at = Carbon::now('Asia/Riyadh');
+        $subscription->expired_at = Carbon::now('Asia/Riyadh')->addDays($package->duration);
 
         $subscription->save();
 
@@ -158,8 +158,8 @@ class SubscriptionController extends Controller
         $subscription->user_id = $this->request->user_id;
         $subscription->package_id = $this->request->package_id;
         $subscription->staff = isset($this->request->staff) ? 1 : 0;
-        $subscription->started_at = Carbon::now();
-        $subscription->expired_at = Carbon::now()->addDays($package->duration);
+        $subscription->started_at = Carbon::now('Asia/Riyadh');
+        $subscription->expired_at = Carbon::now('Asia/Riyadh')->addDays($package->duration);
         $subscription->save();
         if ($subscription) {
             return redirect('/all-subscriptions')->with('success', 'تم تعديل الباقة بنجاح');

@@ -44,7 +44,7 @@
                             </td>
 
                             <td>
-                                @if ($subscription->expired_at > \Carbon\carbon::now())
+                                @if ($subscription->expired_at > \Carbon\carbon::now('Asia/Riyadh'))
                                 <span class="badge badge-success">ساري</span>
                                 @else
                                 <span class="badge badge-danger">غير ساري</span>

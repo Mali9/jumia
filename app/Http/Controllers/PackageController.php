@@ -26,8 +26,8 @@ class PackageController extends Controller
         $subscribe = new Subscription;
         $subscribe->user_id = $user_id;
         $subscribe->package_id = $package_id;
-        $subscribe->started_at = Carbon::now();
-        $subscribe->expired_at = Carbon::now()->addDays($package->duration);
+        $subscribe->started_at = Carbon::now('Asia/Riyadh');
+        $subscribe->expired_at = Carbon::now('Asia/Riyadh')->addDays($package->duration);
         $subscribe->save();
         return response()->json(['data' => 'تم الإشتراك بنجاح'], 200);
     }

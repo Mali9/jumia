@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Sport_Models\Taxonomy;
 use App\Sport_Models\Term;
 use App\Sport_Models\WpTermRelationship;
+use App\Subscription;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -34,9 +36,9 @@ class PostController extends Controller
     }
 
 
-    public function show($id)
+    public function show($id, $user_id = null)
     {
-        $posts = Post::select('ID', 'post_date', 'post_content', 'post_title', 'post_name')
+        $post = Post::select('ID', 'post_date', 'post_content', 'post_title', 'post_name')
             ->where('ID', $id)
             ->where(['post_status' => 'publish', 'post_type' => 'post'])
             ->orderBy('post_date', 'desc')
@@ -47,8 +49,24 @@ class PostController extends Controller
                 $query->select('comment_post_ID', 'comment_author', 'comment_date', 'comment_content');
             }))
             ->withCount('comments')
-            ->first(10);
-        return response()->json(['data' => $posts], 200);
+            ->first();
+
+
+        if (Carbon::now('Asia/Riyadh')->diffInHours($post->post_date) > $this->browsing_duration()) {
+
+            $user_subscribe = Subscription::where('user_id', $user_id)
+                ->whereDate('expired_at', '>=', Carbon::now())
+                ->where('status', 1)
+                ->orWhere('staff', 1)
+                ->get();
+            if (count($user_subscribe) == 0) {
+                return response()->json(['data' => 'عفوا يجب عليك الإشتراك في أحدى الباقات'], 403);
+            } else {
+                return response()->json(['data' => $post], 200);
+            }
+        }
+
+        return response()->json(['data' => $post], 200);
     }
 
 

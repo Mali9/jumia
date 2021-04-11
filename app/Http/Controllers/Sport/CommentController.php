@@ -57,8 +57,8 @@ class CommentController extends Controller
 
             $comment->comment_post_ID = $request->post_id;
             $comment->comment_content = $request->comment;
-            $comment->comment_date = Carbon::now();
-            $comment->comment_date_gmt = Carbon::now();
+            $comment->comment_date = Carbon::now('Asia/Riyadh');
+            $comment->comment_date_gmt = Carbon::now('Asia/Riyadh');
 
             $comment->comment_author = auth()->user()->username;
             $comment->comment_author_email = auth()->user()->email;
@@ -71,9 +71,9 @@ class CommentController extends Controller
             $comment->comment_post_ID = $request->post_id;
             $comment->comment_content = $request->comment;
             $comment->comment_author = $request->username;
-            $comment->comment_date_gmt = Carbon::now();
+            $comment->comment_date_gmt = Carbon::now('Asia/Riyadh');
 
-            $comment->comment_date = Carbon::now();
+            $comment->comment_date = Carbon::now('Asia/Riyadh');
             $comment->save();
 
             return response()->json(['message' => 'تم التعليق بنجاح', 'data' => $comment], 200);
@@ -118,8 +118,8 @@ class CommentController extends Controller
             $comment->comment_post_ID = $request->post_id;
             $comment->comment_content = $request->comment;
             $comment->comment_parent = $request->comment_id;
-            $comment->comment_date = Carbon::now();
-            $comment->comment_date_gmt = Carbon::now();
+            $comment->comment_date = Carbon::now('Asia/Riyadh');
+            $comment->comment_date_gmt = Carbon::now('Asia/Riyadh');
 
             $comment->comment_author = auth()->user()->username;
             $comment->comment_author_email = auth()->user()->email;
@@ -132,10 +132,10 @@ class CommentController extends Controller
             $comment->comment_post_ID = $request->post_id;
             $comment->comment_content = $request->comment;
             $comment->comment_author = $request->username;
-            $comment->comment_date_gmt = Carbon::now();
+            $comment->comment_date_gmt = Carbon::now('Asia/Riyadh');
             $comment->comment_parent = $request->comment_id;
 
-            $comment->comment_date = Carbon::now();
+            $comment->comment_date = Carbon::now('Asia/Riyadh');
             $comment->save();
 
             return response()->json(['message' => 'تم التعليق بنجاح', 'data' => $comment], 200);
