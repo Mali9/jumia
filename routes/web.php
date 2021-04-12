@@ -24,9 +24,15 @@ Route::get('/clear-cache', function () {
 
 
 
-Route::get('/', function () {
+Route::get('/test', function () {
     return view('welcome');
 });
+
+
+
+
+
+
 Route::get('/', 'Admin\AuthController@admin_login')->name('login');
 Route::post('/admin_login', 'Admin\AuthController@login');
 Route::group(['middleware' => ['auth'], 'namespace' => 'Admin'], function () {
@@ -84,6 +90,7 @@ Route::group(['middleware' => ['auth'], 'namespace' => 'Admin'], function () {
     // notifications
 
     Route::get('/notifications', 'NotificationController@index');
+    Route::post('/send_notification', 'NotificationController@sendNotification')->name('send.notification');
 
 
     //site settings

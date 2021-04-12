@@ -12,7 +12,10 @@ class User extends Authenticatable
     use Notifiable, HasApiTokens;
 
     protected $hidden = ['password', 'remember_token', 'type'];
+    protected $fillable = [
 
+        'device_token'
+    ];
 
     protected $connection = 'mysql';
     public function AauthAcessToken()

@@ -9,7 +9,8 @@
         </div>
         <!-- /.card-header -->
         <!-- form start -->
-        <form class="form-horizontal" enctype='multipart/form-data' method="POST" action="{{url('')}}/send_mail">
+        <form class="form-horizontal" enctype='multipart/form-data' method="POST"
+            action="{{url('')}}/send_notification">
             @csrf
             <div class="card-body">
                 <div class="form-group">
@@ -45,7 +46,7 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div class="mb-5">
-                                <textarea cols="40" rows="15" name="message" style="width: 100%"></textarea>
+                                <textarea cols="40" rows="15" name="body" style="width: 100%"></textarea>
                             </div>
 
                         </div>

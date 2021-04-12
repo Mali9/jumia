@@ -88,5 +88,6 @@ Route::group(
         Route::post('/subscribe', 'PackageController@Subscribe');
         Route::get('/my_subscribtions', 'PackageController@mySubscribtions');
         Route::post('/logout', 'LoginController@Logout');
+        Route::post('/save_device_token', 'Admin\NotificationController@saveToken');
     }
 );
