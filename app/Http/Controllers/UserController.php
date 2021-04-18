@@ -108,7 +108,8 @@ class UserController extends Controller
 
     public function success()
     {
-        $url = "https://test.oppwa.com/v1/payments/" . request('id');
+        return request('id');
+        $url = "https://test.oppwa.com/v1/checkouts/" . request('id') . "/payment";
         $url .= "?entityId=8a8294174b7ecb28014b9699220015ca";
 
         $ch = curl_init();
@@ -124,6 +125,6 @@ class UserController extends Controller
             return curl_error($ch);
         }
         curl_close($ch);
-        dd(json_decode($responseData));
+        return $responseData;
     }
 }

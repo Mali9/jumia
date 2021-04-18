@@ -87,6 +87,7 @@ Route::group(
         Route::post('/update_profile', 'UserController@UpdateProfile');
         Route::post('/subscribe', 'PackageController@Subscribe');
         Route::post('/payment', 'PackageController@payment');
+        Route::post('/paymentWithFront', 'PackageController@paymentWithFront');
 
         Route::get('/my_subscribtions', 'PackageController@mySubscribtions');
         Route::post('/logout', 'LoginController@Logout');
