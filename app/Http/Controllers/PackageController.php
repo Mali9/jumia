@@ -18,6 +18,30 @@ class PackageController extends Controller
 
     public function Subscribe()
     {
+
+        $url = "https://test.oppwa.com/v1/payments/" . request('checkout_id');
+        $url .= "?entityId=8a8294174b7ecb28014b9699220015ca";
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Authorization:Bearer OGE4Mjk0MTc0YjdlY2IyODAxNGI5Njk5MjIwMDE1Y2N8c3k2S0pzVDg='
+        ));
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // this should be set to true in production
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $responseData = curl_exec($ch);
+        if (curl_errno($ch)) {
+            return curl_error($ch);
+        }
+        curl_close($ch);
+
+        $result = json_decode($responseData);
+        $code = $result->result->code;
+        if ($code != '000.100.110') {
+            return response()->json(['data' => 'هناك خطأ في عملية الدفع'], 400);
+        }
+
         $user_id = auth()->user()->id;
         $package_id = request('package_id');
 
@@ -36,5 +60,40 @@ class PackageController extends Controller
     {
         $subscribtions = Subscription::where('user_id', auth()->user()->id)->with('user', 'package')->get();
         return response()->json(['data' => $subscribtions], 200);
+    }
+
+
+
+
+    public function payment()
+    {
+
+        $url = "https://test.oppwa.com/v1/payments";
+        $data = "entityId=8a8294174b7ecb28014b9699220015ca" .
+            "&amount=" . request('amount') .
+            "&currency=EUR" .
+            "&paymentBrand=" . request('paymentBrand') .
+            "&paymentType=DB" .
+            "&card.number=" . request('number') .
+            "&card.holder=" . request('name') .
+            "&card.expiryMonth=" . request('expiryMonth') .
+            "&card.expiryYear=" . request('expiryYear') .
+            "&card.cvv=" . request('cvv');
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Authorization:Bearer OGE4Mjk0MTc0YjdlY2IyODAxNGI5Njk5MjIwMDE1Y2N8c3k2S0pzVDg='
+        ));
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // this should be set to true in production
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $responseData = curl_exec($ch);
+        if (curl_errno($ch)) {
+            return curl_error($ch);
+        }
+        curl_close($ch);
+        return response()->json(['data' => json_decode($responseData)], 200);
     }
 }

@@ -24,9 +24,8 @@ Route::get('/clear-cache', function () {
 
 
 
-Route::get('/test', function () {
-    return view('welcome');
-});
+Route::get('/test', 'UserController@test');
+Route::get('/success', 'UserController@success');
 
 
 
