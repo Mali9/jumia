@@ -19,9 +19,13 @@ class PackageController extends Controller
     public function payment()
     {
 
+        $user_id = auth()->user()->id;
+        $package_id = request('package_id');
+
+        $package = Package::findOrFail($package_id);
         $url = "https://test.oppwa.com/v1/payments";
         $data = "entityId=8a8294174b7ecb28014b9699220015ca" .
-            "&amount=" . request('amount') .
+            "&amount=" . $package->price .
             "&currency=EUR" .
             "&paymentBrand=" . request('paymentBrand') .
             "&paymentType=DB" .
@@ -73,10 +77,7 @@ class PackageController extends Controller
             return response()->json(['data' => 'هناك خطأ في عملية الدفع'], 400);
         }
 
-        $user_id = auth()->user()->id;
-        $package_id = request('package_id');
 
-        $package = Package::findOrFail($package_id);
 
         $subscribe = new Subscription;
         $subscribe->user_id = $user_id;
