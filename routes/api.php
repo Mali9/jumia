@@ -78,16 +78,19 @@ Route::group(['prefix' => 'sport', 'namespace' => 'Sport'], function () {
 
 Route::get('/all_packages', 'PackageController@index');
 
+Route::post('/payment', 'PackageController@payment');
 
+
+Route::get('/callback', 'PackageController@callback');
+Route::get('/success/{package_id}', 'PackageController@success');
 Route::group(
     ['middleware' => 'auth:api'],
     function () {
 
         Route::get('/my_profile', 'UserController@myProfile');
         Route::post('/update_profile', 'UserController@UpdateProfile');
-        Route::post('/subscribe', 'PackageController@Subscribe');
-        Route::post('/payment', 'PackageController@payment');
-        Route::post('/paymentWithFront', 'PackageController@paymentWithFront');
+
+
 
         Route::get('/my_subscribtions', 'PackageController@mySubscribtions');
         Route::post('/logout', 'LoginController@Logout');

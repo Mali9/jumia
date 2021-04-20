@@ -19,48 +19,42 @@ class PackageController extends Controller
     public function payment()
     {
 
-        $user_id = auth()->user()->id;
         $package_id = request('package_id');
 
         $package = Package::findOrFail($package_id);
-        $url = "https://test.oppwa.com/v1/payments";
-        $data = "entityId=8a8294174b7ecb28014b9699220015ca" .
-            "&amount=" . $package->price .
-            "&currency=EUR" .
-            "&paymentBrand=" . request('paymentBrand') .
-            "&paymentType=DB" .
-            "&card.number=" . request('number') .
-            "&card.holder=" . request('name') .
-            "&card.expiryMonth=" . request('expiryMonth') .
-            "&card.expiryYear=" . request('expiryYear') .
-            "&card.cvv=" . request('cvv');
+        $url = "https://secure.paytabs.sa/payment/request";
+        $data = [
+            "profile_id" => 66105,
+            "tran_type" => "sale",
+            "tran_class" => "ecom",
+            "cart_id" => "4244b9fd-c7e9-4f16-8d3c-4fe7bf6c48ca",
+            "cart_description" => "Dummy data",
+            "cart_currency" => "SAR",
+            "cart_amount" => $package->price,
+            "callback" => url('/callback'),
+            "return" => url('api/success/' . $package_id),
+
+            "customer_details" => array(
+                "name" => "mohamed",
+                "email" => "mohamedalidimofinf@gmail.com",
+                "phone" => "+966 50 505 0550",
+                "street1" => "Your Address",
+                "city" => "Riyad",
+                "state" => "01",
+                "country" => "SA"
+            ),
+        ];
+
+
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Authorization:Bearer OGE4Mjk0MTc0YjdlY2IyODAxNGI5Njk5MjIwMDE1Y2N8c3k2S0pzVDg='
+            'authorization:SLJNRG299K-JBKWTLRTHD-RZHGRGZHDB',
+            'content-type: application/json'
         ));
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // this should be set to true in production
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $responseData1 = curl_exec($ch);
-        if (curl_errno($ch)) {
-            return curl_error($ch);
-        }
-        curl_close($ch);
-        $res = json_decode($responseData1);
-
-        // dd($res);
-        $url = "https://test.oppwa.com/v1/payments/" . $res->id;
-        $url .= "?entityId=8a8294174b7ecb28014b9699220015ca";
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Authorization:Bearer OGE4Mjk0MTc0YjdlY2IyODAxNGI5Njk5MjIwMDE1Y2N8c3k2S0pzVDg='
-        ));
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // this should be set to true in production
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $responseData = curl_exec($ch);
@@ -69,16 +63,15 @@ class PackageController extends Controller
         }
         curl_close($ch);
 
-        $result = json_decode($responseData);
-        $code = $result->result->code;
-        // dd($result->result);
-        // return $code;
-        if ($code != '000.100.110') {
-            return response()->json(['data' => 'هناك خطأ في عملية الدفع'], 400);
-        }
+        $res = json_decode($responseData);
+        // dd($res);
+        return redirect($res->redirect_url);
+    }
 
+    public function success($package_id)
+    {
 
-
+        $user_id = auth()->user()->id;
         $subscribe = new Subscription;
         $subscribe->user_id = $user_id;
         $subscribe->package_id = $package_id;
@@ -88,44 +81,16 @@ class PackageController extends Controller
         return response()->json(['data' => 'تم الإشتراك بنجاح'], 200);
     }
 
+    public function callback()
+    {
+
+
+        return response()->json(['data' => 'هناك خطأ في عملية الدفع'], 400);
+    }
+
     public function mySubscribtions()
     {
         $subscribtions = Subscription::where('user_id', auth()->user()->id)->with('user', 'package')->get();
         return response()->json(['data' => $subscribtions], 200);
-    }
-
-
-
-
-    public function paymentWithFront()
-    {
-
-        $user_id = auth()->user()->id;
-        $package_id = request('package_id');
-
-        $package = Package::findOrFail($package_id);
-
-        $url = "https://test.oppwa.com/v1/checkouts";
-        $data = "entityId=8a8294174b7ecb28014b9699220015ca" .
-            "&amount=" . $package->price .
-            "&currency=EUR" .
-            "&paymentType=DB";
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Authorization:Bearer OGE4Mjk0MTc0YjdlY2IyODAxNGI5Njk5MjIwMDE1Y2N8c3k2S0pzVDg='
-        ));
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // this should be set to true in production
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $responseData = curl_exec($ch);
-        if (curl_errno($ch)) {
-            return curl_error($ch);
-        }
-        curl_close($ch);
-        $res = json_decode($responseData);
-        return view('welcome', compact('res'));
     }
 }
