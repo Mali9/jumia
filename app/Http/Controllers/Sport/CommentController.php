@@ -53,7 +53,7 @@ class CommentController extends Controller
             return response()->json(['data' => $errors], 400);
         }
 
-        if (auth()->check()) {
+        if (auth()->guard('api')->check()) {
             $comment = new Comment;
 
             $comment->comment_post_ID = $request->post_id;
@@ -63,9 +63,9 @@ class CommentController extends Controller
             $comment->comment_date = Carbon::now('Asia/Riyadh');
             $comment->comment_date_gmt = Carbon::now('Asia/Riyadh');
 
-            $comment->comment_author = auth()->user()->username;
-            $comment->comment_author_email = auth()->user()->email;
-            $comment->user_id = auth()->user()->id;
+            $comment->comment_author = auth()->guard('api')->user()->username;
+            $comment->comment_author_email = auth()->guard('api')->user()->email;
+            $comment->user_id = auth()->guard('api')->user()->id;
 
             $comment->save();
             return response()->json(['message' => 'تم التعليق بنجاح', 'data' => $comment], 200);
@@ -119,7 +119,7 @@ class CommentController extends Controller
             return response()->json(['data' => $errors], 400);
         }
 
-        if (auth()->check()) {
+        if (auth()->guard('api')->check()) {
             $comment = new Comment;
 
             $comment->comment_post_ID = $request->post_id;
@@ -130,9 +130,9 @@ class CommentController extends Controller
             $comment->comment_date = Carbon::now('Asia/Riyadh');
             $comment->comment_date_gmt = Carbon::now('Asia/Riyadh');
 
-            $comment->comment_author = auth()->user()->username;
-            $comment->comment_author_email = auth()->user()->email;
-            $comment->user_id = auth()->user()->id;
+            $comment->comment_author = auth()->guard('api')->user()->username;
+            $comment->comment_author_email = auth()->guard('api')->user()->email;
+            $comment->user_id = auth()->guard('api')->user()->id;
 
             $comment->save();
             return response()->json(['message' => 'تم التعليق بنجاح', 'data' => $comment], 200);

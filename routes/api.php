@@ -49,8 +49,8 @@ Route::group(['namespace' => 'News'], function () {
 
 
     // comments routes
-    Route::post('/store_comment', 'CommentController@store')->middleware('auth:api');
-    Route::post('/store_reply', 'CommentController@storeReply')->middleware('auth:api');
+    Route::post('/store_comment', 'CommentController@store');
+    Route::post('/store_reply', 'CommentController@storeReply');
     Route::get('/comment_replies', 'CommentController@getReplies');
     Route::post('/like_comment', 'CommentController@likeComment')->middleware('auth:api');
     Route::post('/dislike_comment', 'CommentController@disLikeComment')->middleware('auth:api');
@@ -81,8 +81,8 @@ Route::group(['prefix' => 'sport', 'namespace' => 'Sport'], function () {
 
 
     // comments routes
-    Route::post('/store_comment', 'CommentController@store')->middleware('auth:api');
-    Route::post('/store_reply', 'CommentController@storeReply')->middleware('auth:api');
+    Route::post('/store_comment', 'CommentController@store');
+    Route::post('/store_reply', 'CommentController@storeReply');
     Route::get('/comment_replies', 'CommentController@getReplies');
     Route::post('/like_comment', 'CommentController@likeComment')->middleware('auth:api');
     Route::post('/dislike_comment', 'CommentController@disLikeComment')->middleware('auth:api');
