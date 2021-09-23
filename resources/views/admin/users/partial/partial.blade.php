@@ -18,6 +18,7 @@
                         <th>الاسم</th>
                         <th>الصورة</th>
                         <th>البريد الالكتروني</th>
+                        <th>staff</th>
                         <th>الحالة</th>
                         <th>التحكم</th>
                         @foreach ($users as $user)
@@ -35,6 +36,13 @@
 
                             </td>
                             <td>{{ $user->email }}</td>
+                            <td>
+                                @if ($user->staff == 1)
+                                <span class="badge badge-success">staff</span>
+                                @else
+                                <span class="badge badge-danger">user</span>
+                                @endif
+                            </td>
 
                             <td>
                                 @if ($user->status == 1)

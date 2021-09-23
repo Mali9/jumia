@@ -20,8 +20,8 @@
                         <th>تاريخ بدء الإشتراك</th>
                         <th>تاريخ إنتهاء الإشتراك</th>
                         <th> حالة الإشتراك</th>
-                        <th> مدة الإشتراك</th>
-                        <th> عضو دائم</th>
+                        {{-- <th> مدة الإشتراك</th> --}}
+                        {{-- <th> staff</th> --}}
 
                         <th>التحكم</th>
                         @foreach ($subscriptions as $subscription)
@@ -34,14 +34,14 @@
                             <td>{{ $subscription->started_at }}</td>
                             <td>{{ $subscription->expired_at }}</td>
 
-
+                            {{-- 
                             <td>
                                 @if ($subscription->status == 1)
                                 <span class="badge badge-success">مفعل</span>
                                 @else
                                 <span class="badge badge-danger">غير مفعل</span>
                                 @endif
-                            </td>
+                            </td> --}}
 
                             <td>
                                 @if ($subscription->expired_at > \Carbon\carbon::now('Asia/Riyadh'))
@@ -50,7 +50,7 @@
                                 <span class="badge badge-danger">غير ساري</span>
                                 @endif
                             </td>
-                            <td>{{ $subscription->staff ? 'نعم' : 'لا' }}</td>
+                            {{-- <td>{{ $subscription->staff ? 'نعم' : 'لا' }}</td> --}}
                             <td>
                                 <table class="table table-bordered">
                                     <tr>
@@ -70,9 +70,9 @@
                                                         <a class="dropdown-item delete"
                                                             href="{{ url('/delete_subscription') }}/{{ $subscription->id }}">حذف</a>
 
-                                                        <a class="dropdown-item"
+                                                        {{-- <a class="dropdown-item"
                                                             href="{{ url('/change_subscription_status') }}/{{ $subscription->id }}">تغيير
-                                                            حالة الإشتراك</a>
+                                                        حالة الإشتراك</a> --}}
 
                                                         {{-- <a class="dropdown-item"
                                                             href="{{ url('/change_subscription_status') }}/{{ $subscription->id }}">تمديد

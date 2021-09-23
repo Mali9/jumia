@@ -29,11 +29,11 @@ class UserController extends Controller
             if ($this->request->keyword) {
                 $users = $users->where('username', 'LIKE', '%' . $this->request->keyword . '%')->where('type', 'user');
             }
-            $users = $users->orderBy('id')->where('type', 'user')->paginate(10);
+            $users = $users->orderBy('id', 'desc')->where('type', 'user')->paginate(10);
 
             return view('admin.users.partial.partial', compact('users'));
         }
-        $users = $users->orderBy('id')->where('type', 'user')->paginate(10);
+        $users = $users->orderBy('id', 'desc')->where('type', 'user')->paginate(10);
 
         return view('admin.users.index', compact('users'));
     }
@@ -59,7 +59,7 @@ class UserController extends Controller
             'email' => 'required|unique:users,email',
             'username' => 'required|min:1|max:255',
             'password' => 'required|min:3|max:255',
-            'image' => 'required|max:10000',
+            'image' => 'sometimes|max:10000',
         ]);
         if ($validator->fails()) {
             $errors = [];
@@ -70,7 +70,7 @@ class UserController extends Controller
                 $index++;
             }
 
-            return redirect()->back()->withErrors($validator->errors());
+            return redirect()->back()->withErrors($validator->errors())->withInput();
         }
 
 
@@ -78,6 +78,7 @@ class UserController extends Controller
         $user->fullname = $this->request->fullname;
         $user->username = $this->request->username;
         $user->email = $this->request->email;
+        $user->staff = $this->request->staff ? 1 : 0;
         $user->password = Hash::make($this->request->password);
         if (isset($this->request->image) && !empty($this->request->image)) {
             $imageName = Helper::upload_user_image($this->request->image);
@@ -148,7 +149,7 @@ class UserController extends Controller
                 $index++;
             }
 
-            return redirect()->back()->withErrors($validator->errors());
+            return redirect()->back()->withErrors($validator->errors())->withInput();
         }
 
 
@@ -161,6 +162,8 @@ class UserController extends Controller
         $user->fullname = $this->request->fullname;
         $user->username = $this->request->username;
         $user->email = $this->request->email;
+        $user->staff = $this->request->staff ? 1 : 0;
+
         if (isset($this->request->password) && !empty($this->request->password)) {
             $user->password = Hash::make($this->request->password);
         }

@@ -28,11 +28,11 @@ class SubscriptionController extends Controller
             if ($this->request->keyword) {
                 $subscriptions = $subscriptions->where('name', 'LIKE', '%' . $this->request->keyword . '%');
             }
-            $subscriptions = $subscriptions->orderBy('id')->paginate(10);
+            $subscriptions = $subscriptions->orderBy('id', 'desc')->paginate(10);
 
             return view('admin.subscriptions.partial.partial', compact('subscriptions'));
         }
-        $subscriptions = $subscriptions->orderBy('id')->paginate(10);
+        $subscriptions = $subscriptions->orderBy('id', 'desc')->paginate(10);
 
         return view('admin.subscriptions.index', compact('subscriptions'));
     }
@@ -57,7 +57,7 @@ class SubscriptionController extends Controller
 
         $validator = Validator::make($this->request->all(), [
             'package_id' => 'required',
-            'user_id' => 'required',
+            // 'user_id' => 'required',
         ]);
         if ($validator->fails()) {
             $errors = [];
@@ -68,15 +68,15 @@ class SubscriptionController extends Controller
                 $index++;
             }
 
-            return redirect()->back()->withErrors($validator->errors());
+            return redirect()->back()->withErrors($validator->errors())->withInput();
         }
 
         $package = Package::findOrFail($this->request->package_id);
 
         $subscription = $this->subscription;
-        $subscription->user_id = $this->request->user_id;
+        // $subscription->user_id = $this->request->user_id;
         $subscription->package_id = $this->request->package_id;
-        $subscription->staff = $this->request->staff ? 1 : 0;
+        // $subscription->staff = $this->request->staff ? 1 : 0;
         $subscription->started_at = Carbon::now('Asia/Riyadh');
         $subscription->expired_at = Carbon::now('Asia/Riyadh')->addDays($package->duration);
 
@@ -134,7 +134,7 @@ class SubscriptionController extends Controller
 
         $validator = Validator::make($this->request->all(), [
             'package_id' => 'required',
-            'user_id' => 'required',
+            // 'user_id' => 'required',
         ]);
         if ($validator->fails()) {
             $errors = [];
@@ -145,7 +145,7 @@ class SubscriptionController extends Controller
                 $index++;
             }
 
-            return redirect()->back()->withErrors($validator->errors());
+            return redirect()->back()->withErrors($validator->errors())->withInput();
         }
 
 
@@ -155,9 +155,9 @@ class SubscriptionController extends Controller
 
         $package = Package::findOrFail($this->request->package_id);
 
-        $subscription->user_id = $this->request->user_id;
+        // $subscription->user_id = $this->request->user_id;
         $subscription->package_id = $this->request->package_id;
-        $subscription->staff = isset($this->request->staff) ? 1 : 0;
+        // $subscription->staff = isset($this->request->staff) ? 1 : 0;
         $subscription->started_at = Carbon::now('Asia/Riyadh');
         $subscription->expired_at = Carbon::now('Asia/Riyadh')->addDays($package->duration);
         $subscription->save();

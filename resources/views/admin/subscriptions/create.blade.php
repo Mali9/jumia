@@ -57,18 +57,18 @@
                 </div>
 
 
-                <div class="col-sm-10">
+                {{-- <div class="col-sm-10">
                     <div class="form-group">
                         <div class="form-check">
                             <input id="staff" class="form-check-input" type="checkbox" name="staff" value="true">
-                            <label for="staff" class="form-check-label">عضو دائم</label>
+                            <label for="staff" class="form-check-label">staff</label>
                         </div>
 
                     </div>
                     @error('started_at')
                     <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
-                </div>
+                </div> --}}
 
 
 

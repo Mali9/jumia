@@ -12,4 +12,8 @@ class Package extends Model
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
 
+    public function getDescriptionAttribute($value)
+    {
+        return json_decode($value);
+    }
 }

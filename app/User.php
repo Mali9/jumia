@@ -22,4 +22,8 @@ class User extends Authenticatable
     {
         return $this->hasMany('\App\OauthAccessToken');
     }
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
 }

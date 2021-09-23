@@ -4,6 +4,7 @@ namespace App\Http\Controllers\News;
 
 use App\Post;
 use App\Http\Controllers\Controller;
+use App\PostMeta;
 use App\Subscription;
 use App\Taxonomy;
 use App\Term;
@@ -21,16 +22,19 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::select('ID', 'post_date', 'post_content', 'post_title', 'post_name')
+        $posts = Post::select('ID', 'post_author', 'post_date', 'post_content', 'post_title', 'post_name')
             ->where(['post_status' => 'publish', 'post_type' => 'post'])
             ->orderBy('post_date', 'desc')
             ->with(array('view' => function ($query) {
                 $query->select('post_id', 'meta_value');
             }))
             ->with(array('comments' => function ($query) {
-                $query->select('comment_post_ID', 'comment_author', 'comment_date', 'comment_content');
+                $query->select('comment_ID', 'comment_post_ID', 'comment_author', 'comment_date', 'comment_content')
+                    ->withCount('replies');
             }))
             ->withCount('comments')
+            ->with('author')
+            ->orderBy('post_date', 'desc')
             ->paginate(10);
         return response()->json(['data' => $posts], 200);
     }
@@ -39,7 +43,7 @@ class PostController extends Controller
     public function show($id, $user_id = null)
     {
 
-        $post = Post::select('ID', 'post_date', 'post_content', 'post_title', 'post_name')
+        $post = Post::select('ID', 'post_author', 'post_date', 'post_content', 'post_title', 'post_name', 'comment_status')
             ->where('ID', $id)
             ->where(['post_status' => 'publish', 'post_type' => 'post'])
             ->orderBy('post_date', 'desc')
@@ -47,32 +51,36 @@ class PostController extends Controller
                 $query->select('post_id', 'meta_value');
             }))
             ->with(array('comments' => function ($query) {
-                $query->select('comment_post_ID', 'comment_author', 'comment_date', 'comment_content');
+                $query->select('comment_ID', 'comment_post_ID', 'comment_author', 'comment_date', 'comment_content', 'user_id')
+                    ->withCount('replies');
             }))
             ->withCount('comments')
+            ->with('author')
             ->first();
 
-        if (Carbon::now('Asia/Riyadh')->diffInHours($post->post_date) > $this->browsing_duration()) {
+        if (!$post) {
 
+            return response()->json(['data' => 'المحتوى غير موجود'], 404);
+        }
+
+        if (auth()->guard('api')->check()) {
+            $user_id = auth()->guard('api')->user()->id;
             $user_subscribe = Subscription::where('user_id', $user_id)
-                ->whereDate('expired_at', '>=', Carbon::now())
-                ->where('status', 1)
-                ->orWhere('staff', 1)
-                ->get();
+                ->whereDate('expired_at', '>=', Carbon::now()->format('Y-m-d'))
+                ->count();
 
-
-
-
-            if (count($user_subscribe) == 0) {
-                return response()->json(['data' => 'عفوا يجب عليك الإشتراك في أحدى الباقات'], 403);
-            } else {
+            if ($user_subscribe > 0 ||  (auth()->guard('api')->user()->staff === 1 && auth()->guard('api')->user()->status === 1)) {
                 return response()->json(['data' => $post], 200);
+            } else {
+                return response()->json(['data' => 'عفوا يجب عليك الإشتراك في أحدى الباقات'], 403);
             }
         }
 
-
-
-        return response()->json(['data' => $post], 200);
+        if (Carbon::now('Asia/Riyadh')->diffInHours($post->post_date) > $this->browsing_duration()) {
+            return response()->json(['data' => 'عفوا يجب عليك الإشتراك في أحدى الباقات'], 403);
+        } else {
+            return response()->json(['data' => $post], 200);
+        }
     }
 
 
@@ -82,18 +90,26 @@ class PostController extends Controller
             return response()->json(['message' => 'من فضلك أدخل كلمة للبحث'], 400);
         }
 
-        $posts = Post::select('ID', 'post_date', 'post_content', 'post_title', 'post_name')
-            ->where(['post_status' => 'publish', 'post_type' => 'post'])
-            ->where('post_content', 'LIKE', '%' . request('keyword') . '%')
-            ->orWhere('post_title', 'LIKE', '%' . request('keyword') . '%')
-            ->orderBy('post_date', 'desc')
+        $posts = Post::select('ID', 'post_author', 'post_date', 'post_content', 'post_title', 'post_name', 'post_status', 'post_type')
+            ->where(function ($query) {
+                $query->where(['post_status' => 'publish', 'post_type' => 'post'])
+                    ->where('post_content', 'LIKE', '%' . request('keyword') . '%');
+            })
+            ->orWhere(function ($query) {
+                $query->orWhere('post_title', 'LIKE', '%' . request('keyword') . '%')
+                    ->orderBy('post_date', 'desc');
+            })
             ->with(array('view' => function ($query) {
                 $query->select('post_id', 'meta_value');
             }))
             ->with(array('comments' => function ($query) {
-                $query->select('comment_post_ID', 'comment_author', 'comment_date', 'comment_content');
+                $query->select('comment_ID', 'comment_post_ID', 'comment_author', 'comment_date', 'comment_content')
+                    ->withCount('replies');
             }))
             ->withCount('comments')
+            ->with('author')
+            ->orderBy('post_date', 'desc')
+
             ->paginate(10);
         if (count($posts)) {
             return response()->json(['data' => $posts], 200);
@@ -105,6 +121,8 @@ class PostController extends Controller
     {
         $posts = WpTermRelationship::where('term_taxonomy_id', request('category_id'))
             ->with('post')
+            ->orderBy('object_id', 'desc')
+
             ->paginate(10);
 
         return response()->json(['data' => $posts], 200);
@@ -117,11 +135,21 @@ class PostController extends Controller
             $posts = WpTermRelationship::where('term_taxonomy_id', $category->term_taxonomy_id)
                 ->where('object_id', '!=', request('post_id'))
                 ->with('post')
+                ->orderBy('object_id', 'desc')
                 ->paginate(10);
 
             return response()->json(['data' => $posts], 200);
         } else {
             return response()->json(['message' => 'لا يوجد نتائج '], 400);
         }
+    }
+
+
+    public function getPageContent($id)
+    {
+        $page = Post::where('ID', $id)
+            ->where('post_type', 'page')
+            ->first();
+        return response()->json(['data' => $page], 200);
     }
 }

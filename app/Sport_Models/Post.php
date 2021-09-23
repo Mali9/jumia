@@ -12,7 +12,7 @@ class Post extends Model
     protected $primaryKey = 'ID';
     protected $table = 'spwp_posts';
 
-    protected $appends = ['views'];
+    protected $appends = ['views', 'featured_image'];
 
 
 
@@ -34,8 +34,13 @@ class Post extends Model
      */
     public function comments()
     {
-        return $this->hasMany(Comment::class, 'comment_post_ID');
+        return $this->hasMany(Comment::class, 'comment_post_ID')
+            ->where('comment_parent', 0)
+            ->with('like_counter')
+            ->with('dislike_counter')
+            ->withCount('replies');
     }
+
 
 
     public function getViewsAttribute()
@@ -43,8 +48,29 @@ class Post extends Model
         return $this->view->meta_value ?? '';
     }
 
+    public function getFeaturedImageAttribute()
+    {
+        $image_mime_types = array(
+            'image/jpeg',
+            'image/gif',
+            'image/png',
+            'image/bmp',
+            'image/tiff',
+            'image/x-icon'
+        );
+        return $this
+            ->where('post_parent', $this->ID)
+            ->where('post_type', 'attachment')
+            ->whereIn('post_mime_type', $image_mime_types)
+            ->first()->guid ?? '';
+    }
+
     public function scopePublish()
     {
         return $this->where(['post_status' => 'publish', 'post_type' => 'post']);
+    }
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'post_author', 'ID')->select(['ID', 'display_name']);
     }
 }

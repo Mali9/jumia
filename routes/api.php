@@ -35,9 +35,17 @@ Route::group(['namespace' => 'News'], function () {
     Route::get('/search', 'PostController@Search');
     Route::get('/posts_by_category', 'PostController@postsByCategory');
 
+
+    // get_page contenct
+    Route::get('/get_page/{id}', 'PostController@getPageContent');
+
+
+
     // categories
 
     Route::get('/categories', 'CategoryController@index');
+
+
 
 
     // comments routes
@@ -46,6 +54,7 @@ Route::group(['namespace' => 'News'], function () {
     Route::get('/comment_replies', 'CommentController@getReplies');
     Route::post('/like_comment', 'CommentController@likeComment')->middleware('auth:api');
     Route::post('/dislike_comment', 'CommentController@disLikeComment')->middleware('auth:api');
+    Route::post('/report_comment', 'CommentController@reportComment');
 });
 
 
@@ -61,6 +70,11 @@ Route::group(['prefix' => 'sport', 'namespace' => 'Sport'], function () {
     Route::get('/search', 'PostController@Search');
     Route::get('/posts_by_category', 'PostController@postsByCategory');
 
+
+    // get_page contenct
+    Route::get('/get_page/{id}', 'PostController@getPageContent');
+
+
     // categories
 
     Route::get('/categories', 'CategoryController@index');
@@ -72,20 +86,19 @@ Route::group(['prefix' => 'sport', 'namespace' => 'Sport'], function () {
     Route::get('/comment_replies', 'CommentController@getReplies');
     Route::post('/like_comment', 'CommentController@likeComment')->middleware('auth:api');
     Route::post('/dislike_comment', 'CommentController@disLikeComment')->middleware('auth:api');
+    Route::post('/report_comment', 'CommentController@reportComment');
 });
 
 // packages
 
 Route::get('/all_packages', 'PackageController@index');
 
-Route::post('/payment', 'PackageController@payment');
-
-
-Route::get('/callback', 'PackageController@callback');
-Route::get('/success/{package_id}', 'PackageController@success');
+Route::post('/get_result/{package_id}/{user_id}', 'PackageController@getPaymentResult');
 Route::group(
     ['middleware' => 'auth:api'],
     function () {
+
+        Route::get('/payment', 'PackageController@payment');
 
         Route::get('/my_profile', 'UserController@myProfile');
         Route::post('/update_profile', 'UserController@UpdateProfile');

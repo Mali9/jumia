@@ -65,13 +65,25 @@ class LoginController extends Controller
     public function register()
     {
         // dd(request()->all());
+        $messages =  [
+            'fullname.required' => 'يجب إدخال أسم المستخدم',
+            'username.required' => 'يجب إدخال أسم المستخدم',
+            'username.unique' => ' أسم المستخدم موجود بالفعل',
+            'email.required' => 'يجب إدخال البريد الإلكتروني  للمستخدم',
+            'email.unique' => '  البريد الإلكتروني  للمستخدم موجود بالفعل',
+            'email.email' => '  من فضلك أدخل بريد الكتروني صحيح',
+            'password.required' => 'يجب إدخال كلمة المرور',
+            'password.min' => 'يجب ألا تقل  كلمة المرور عن 6 أرقام أوأحرف',
+            'password.confirmed' => 'كلمة المرور غير متطابقة',
+
+        ];
         $validator = Validator::make(request()->all(), [
             'fullname' => 'required|max:100',
             'username' => 'required|unique:users,username',
             'email' => 'required|max:100|email|unique:users,email',
             'password' => 'required|min:6|max:100|confirmed',
-            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:10000',
-        ]);
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:10000',
+        ], $messages);
 
 
         if ($validator->fails()) {
@@ -106,14 +118,14 @@ class LoginController extends Controller
             'password' => request('password'),
         ];
 
-        auth()->attempt($credentials);
-        $user = Auth::user();
-        $token = auth()->user()->createToken('authToken')->accessToken;
+        // auth()->attempt($credentials);
+        // $user = Auth::user();
+        // $token = auth()->user()->createToken('authToken')->accessToken;
 
         return response()->json([
             'message' => 'تم إنشاء المتسخدم بنجاح',
-            'data' => $user,
-            'token' => $token
+            'data' => $this->user,
+            // 'token' => $token
         ], 200);
         // return response()->json(['message' => 'تم إنشاء المتسخدم بنجاح', 'data' => $this->user], 200);
     }

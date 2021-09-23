@@ -24,6 +24,9 @@ class User extends Authenticatable
     protected $fillable = [
         'ID', 'user_email', 'user_pass'
     ];
+    protected $appends = [
+        'image'
+    ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -36,5 +39,17 @@ class User extends Authenticatable
     public function AauthAcessToken()
     {
         return $this->hasMany('\App\OauthAccessToken');
+    }
+    public function getImageAttribute()
+    {
+        $email = $this->user_email;
+
+        $s = 80;
+        $d = 'mp';
+        $r = 'g';
+        $url = 'https://www.gravatar.com/avatar/';
+        $url .= md5(strtolower(trim($email)));
+        $url .= "?s=$s&d=$d&r=$r";
+        return $url;
     }
 }

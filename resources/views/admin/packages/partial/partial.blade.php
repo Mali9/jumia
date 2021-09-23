@@ -15,6 +15,7 @@
                         <th> الكود</th>
 
                         <th>الاسم</th>
+                        <th>الوصف</th>
                         <th>السعر</th>
                         <th>المدة بالشهر</th>
 
@@ -23,6 +24,19 @@
                         <tr>
                             <td>{{ $package->id }}</td>
                             <td>{{ $package->name }}</td>
+                            <td style="padding-right: 50px">
+                                {{-- @dump($package->description) --}}
+
+                                <ul>
+                                    @if (isset($package->description))
+                                    @foreach ($package->description as $list)
+                                    <li>
+                                        {{$list}}
+                                    </li>
+                                    @endforeach
+                                    @endif
+                                </ul>
+                            </td>
                             <td>{{ $package->price }}</td>
 
                             <td>{{ $package->duration }}</td>

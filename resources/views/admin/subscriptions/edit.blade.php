@@ -44,8 +44,9 @@
                 <div class="col-sm-10">
                     <div class="form-group">
                         <label for="exampleInputEmail1">أختر المستخدم</label>
-                        <select name="user_id" id="select2" class="form-control select2 select2-hidden-accessible"
-                            style="width: 100%;" tabindex="-1" aria-hidden="true" required>
+                        <select name="user_id" disabled id="select2"
+                            class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1"
+                            aria-hidden="true" required>
                             <option value="أختر الباقة"></option>
                             @foreach ($users as $user)
                             <option value="{{ $user->id }}" @if ($subscription->user_id == $user->id)
@@ -65,23 +66,24 @@
 
 
 
-
+                {{-- 
                 <div class="col-sm-10">
                     <div class="form-group">
                         <div class="form-check">
                             <input id="staff" @if ($subscription->staff)
                             checked
                             @endif class="form-check-input" type="checkbox" name="staff" value="true">
-                            <label for="staff" class="form-check-label">عضو دائم</label>
+                            <label for="staff" class="form-check-label">staff</label>
                         </div>
 
                     </div>
                     @error('started_at')
-                    <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
-                </div>
+                    <div class="alert alert-danger">{{ $message }}
+            </div>
+            @enderror
+    </div> --}}
 
-                {{-- 
+    {{-- 
                 <div class="col-sm-10">
                     <div class="form-group">
                         <label for="expired_at" class="col-sm-2 control-label"> تاريخ الإنتهاء </label>
@@ -91,18 +93,18 @@
                     </div>
                 </div> --}}
 
-            </div>
+</div>
 
 
 
-    </div>
-    <!-- /.card-body -->
-    <div class="card-footer">
-        <button type="submit" class="btn btn-primary"> تعديل </button>
-        <a class="btn btn-danger float-left" href="{{ url('/all-subscriptions') }}"> إلغاء </a>
-    </div>
-    <!-- /.card-footer -->
-    </form>
+</div>
+<!-- /.card-body -->
+<div class="card-footer">
+    <button type="submit" class="btn btn-primary"> تعديل </button>
+    <a class="btn btn-danger float-left" href="{{ url('/all-subscriptions') }}"> إلغاء </a>
+</div>
+<!-- /.card-footer -->
+</form>
 </div>
 </div>
 

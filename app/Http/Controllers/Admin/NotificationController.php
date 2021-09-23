@@ -11,7 +11,7 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        $notifications = Notification::paginate(10);
+        $notifications = Notification::orderBy('id', 'desc')->paginate(10);
         return view('notifications', compact('notifications'));
     }
 
@@ -25,7 +25,7 @@ class NotificationController extends Controller
     public function sendNotification(Request $request)
     {
 
-        $SERVER_API_KEY = 'AAAAZLOa8iw:APA91bGYRFmFXXAp4fYtTj3Nbw0_ypiHdVeude3IPmMNh5b0XtpHFluwUISCaBnChJ5b18A16UJ8sYJVeiVpj7rnnyNZK68QHFaDRUSby9RcHcZLoqM-5Mjn44PYUzAb5vnPJHXkRndf';
+        $SERVER_API_KEY = 'AAAAeessmcc:APA91bEDXw4-_Q0XLSTte9W4VS7UEhs1ka64bXhZvBAceqsUwAYap4oJmTh9dL1QohsYiziFn6hWeymV4ZuIFDBzIXmO5BEPzkIWjmxMWgaDRKNSQZ8AZ3gwCZOUJYYxHyZtTgfaIOg-';
 
         $data = [
             "to" => '/topics/all',

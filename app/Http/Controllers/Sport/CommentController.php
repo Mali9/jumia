@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use App\Sport_Models\Notifications\NewComment;
 use App\Sport_Models\Product;
 use App\Sport_Models\WpLikeDislikeCounters;
+use App\UserLikeDislike;
 
 class CommentController extends Controller
 {
@@ -62,6 +63,8 @@ class CommentController extends Controller
 
             $comment->comment_author = auth()->user()->username;
             $comment->comment_author_email = auth()->user()->email;
+            $comment->user_id = auth()->user()->id;
+
             $comment->save();
             return response()->json(['message' => 'تم التعليق بنجاح', 'data' => $comment], 200);
         }
@@ -123,6 +126,8 @@ class CommentController extends Controller
 
             $comment->comment_author = auth()->user()->username;
             $comment->comment_author_email = auth()->user()->email;
+            $comment->user_id = auth()->user()->id;
+
             $comment->save();
             return response()->json(['message' => 'تم التعليق بنجاح', 'data' => $comment], 200);
         }
@@ -134,7 +139,6 @@ class CommentController extends Controller
             $comment->comment_author = $request->username;
             $comment->comment_date_gmt = Carbon::now('Asia/Riyadh');
             $comment->comment_parent = $request->comment_id;
-
             $comment->comment_date = Carbon::now('Asia/Riyadh');
             $comment->save();
 
@@ -148,7 +152,10 @@ class CommentController extends Controller
     public function getReplies()
     {
         $comment = Comment::where('comment_parent', request('comment_id'))
-            ->where(['comment_approved' => 1, 'comment_type' => 'comment'])->get();
+            ->where(['comment_approved' => 1, 'comment_type' => 'comment'])
+            ->with('like_counter')
+            ->with('dislike_counter')
+            ->get();
         return response()->json(['data' => $comment], 200);
     }
 
@@ -173,6 +180,18 @@ class CommentController extends Controller
 
             return response()->json(['data' => $errors], 400);
         }
+
+
+        $flag = UserLikeDislike::where('comment_id', request('comment_id'))
+            ->where('user_id', auth()->user()->id)
+            ->where('model', 'sports')
+            ->first();
+        if ($flag) {
+            return response()->json(['message' => 'invalid'], 400);
+        }
+
+
+
         $like_comment = WpLikeDislikeCounters::where('post_id', request('comment_id'))
             ->where('ul_key', 'c_like')
             ->first();
@@ -186,6 +205,13 @@ class CommentController extends Controller
             $like->ul_key = 'c_like';
             $like->save();
         }
+
+        $obj = new UserLikeDislike;
+        $obj->user_id = auth()->user()->id;
+        $obj->comment_id = request('comment_id');
+        $obj->type = 'like';
+        $obj->model = 'sports';
+        $obj->save();
         return response()->json(['message' => 'تم'], 200);
     }
 
@@ -209,6 +235,18 @@ class CommentController extends Controller
 
             return response()->json(['data' => $errors], 400);
         }
+
+
+
+        $flag = UserLikeDislike::where('comment_id', request('comment_id'))
+            ->where('user_id', auth()->user()->id)
+            ->where('model', 'sports')
+            ->first();
+        if ($flag) {
+            return response()->json(['message' => 'invalid'], 400);
+        }
+
+
         $like_comment = WpLikeDislikeCounters::where('post_id', request('comment_id'))
             ->where('ul_key', 'c_dislike')
             ->first();
@@ -222,6 +260,56 @@ class CommentController extends Controller
             $like->ul_key = 'c_dislike';
             $like->save();
         }
+
+        $obj = new UserLikeDislike;
+        $obj->user_id = auth()->user()->id;
+        $obj->comment_id = request('comment_id');
+        $obj->type = 'dislike';
+        $obj->model = 'sports';
+        $obj->save();
         return response()->json(['message' => 'تم'], 200);
+    }
+
+    public function reportComment(Request $request)
+    {
+
+
+        $validator = Validator::make($request->all(), [
+            'comment_id' => 'required|exists:mysql_sport.spwp_comments,comment_ID'
+        ]);
+
+
+        if ($validator->fails()) {
+            $errors = [];
+            $index = 0;
+
+            foreach ($validator->errors()->getMessages() as $key => $error) {
+                $errors['errors'][$index]['key'] = $key;
+                $errors['errors'][$index]['error'] = $error[0];
+                $index++;
+            }
+
+            return response()->json(['data' => $errors], 400);
+        }
+
+        $flag = DB::connection('mysql_sport')
+            ->table('spwp_commentmeta')
+            ->where([
+                'comment_id' => request('comment_id'),
+                'meta_key' => 'zrcmnt_reported',
+            ])->count();
+
+        if ($flag) {
+            return response()->json(['message' => 'تم الإبلاغ من قبل'], 400);
+        }
+        DB::connection('mysql_sport')
+            ->table('spwp_commentmeta')
+            ->insert([
+                'comment_id' => request('comment_id'),
+                'meta_key' => 'zrcmnt_reported',
+                'meta_value' => 1
+            ]);
+
+        return response()->json(['message' => 'شكرا لك على ملاحظاتك سوف ننظر في الأمر'], 200);
     }
 }

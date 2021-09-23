@@ -27,22 +27,34 @@ class UserController extends Controller
     public function myProfile()
     {
 
-        return response()->json(['data' => auth()->user()], 200);
+        $user = User::with('subscriptions')->find(auth()->user()->id);
+        return response()->json(['data' => $user], 200);
     }
 
 
     public function UpdateProfile(Request $request)
     {
+        $messages =  [
+            'fullname.required' => 'يجب إدخال أسم المستخدم',
+            'username.required' => 'يجب إدخال أسم المستخدم',
+            'username.unique' => ' أسم المستخدم موجود بالفعل',
+            'email.required' => 'يجب إدخال البريد الإلكتروني  للمستخدم',
+            'email.unique' => '  البريد الإلكتروني  للمستخدم موجود بالفعل',
+            'email.email' => '  من فضلك أدخل بريد الكتروني صحيح',
+            'password.required' => 'يجب إدخال كلمة المرور',
+            'password.min' => 'يجب ألا تقل  كلمة المرور عن 6 أرقام أوأحرف',
+            'password.confirmed' => 'كلمة المرور غير متطابقة',
 
+        ];
 
         // return (auth()->user());
         $validator = Validator::make(request()->all(), [
             'fullname' => 'required|max:100',
             'username' => 'required|unique:users,username,' . auth()->user()->id,
             'email' => 'required|max:100|email|unique:users,email,' . auth()->user()->id,
-            'password' => 'required|min:6|max:100',
+            'password' => 'min:6|max:100',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:10000',
-        ]);
+        ], $messages);
 
 
         if ($validator->fails()) {
@@ -60,7 +72,9 @@ class UserController extends Controller
         $user->username = $request->username;
         $user->fullname = $request->fullname;
         $user->email = $request->email;
-        $user->password = bcrypt($request->password);
+        if (isset($request->password)) {
+            $user->password = bcrypt($request->password);
+        }
 
         if (isset(request()->image) && !empty(request()->image)) {
             $image_path = 'uploads/users/' . $user->image;

@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+use function GuzzleHttp\json_decode;
+
 class PackageController extends Controller
 {
     protected $request;
@@ -29,7 +31,8 @@ class PackageController extends Controller
 
             return view('admin.packages.partial.partial', compact('packages'));
         }
-        $packages = $packages->orderBy('id')->paginate(10);
+        $packages = $packages->orderBy('id', 'desc')->paginate(10);
+        // dd($packages[0]->description[0]);
 
         return view('admin.packages.index', compact('packages'));
     }
@@ -53,6 +56,7 @@ class PackageController extends Controller
         $validator = Validator::make($this->request->all(), [
             'price' => 'required|min:1',
             'duration' => 'required|min:1',
+            'description' => 'required|min:1',
             'name' => 'required|unique:packages,name',
         ]);
         if ($validator->fails()) {
@@ -64,13 +68,15 @@ class PackageController extends Controller
                 $index++;
             }
 
-            return redirect()->back()->withErrors($validator->errors());
+            return redirect()->back()->withErrors($validator->errors())->withInput();
         }
+
 
 
         $package = $this->package;
         $package->price = $this->request->price;
         $package->duration = $this->request->duration;
+        $package->description = json_encode($this->request->description);
         $package->name = $this->request->name;
 
         $package->save();
@@ -122,10 +128,12 @@ class PackageController extends Controller
     public function update()
     {
 
+
         $validator = Validator::make($this->request->all(), [
             'price' => 'required|min:1',
             'duration' => 'required|min:1',
-            'name' => 'required|unique:packages,name',
+            'description' => 'required|min:1',
+            'name' => 'required|unique:packages,name,' . $this->request->package_id,
         ]);
         if ($validator->fails()) {
             $errors = [];
@@ -136,7 +144,7 @@ class PackageController extends Controller
                 $index++;
             }
 
-            return redirect()->back()->withErrors($validator->errors());
+            return redirect()->back()->withErrors($validator->errors())->withInput();
         }
 
 
@@ -145,6 +153,7 @@ class PackageController extends Controller
 
         $package->price = $this->request->price;
         $package->duration = $this->request->duration;
+        $package->description = json_encode($this->request->description);
         $package->name = $this->request->name;
         $package->save();
         if ($package) {
