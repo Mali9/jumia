@@ -78,6 +78,7 @@ class PackageController extends Controller
         $package->duration = $this->request->duration;
         $package->description = json_encode($this->request->description);
         $package->name = $this->request->name;
+        $package->favourit = $this->request->favourit ? 1 : 0;
 
         $package->save();
 
@@ -155,6 +156,8 @@ class PackageController extends Controller
         $package->duration = $this->request->duration;
         $package->description = json_encode($this->request->description);
         $package->name = $this->request->name;
+        $package->favourit = $this->request->favourit ? 1 : 0;
+
         $package->save();
         if ($package) {
             return redirect('/all-packages')->with('success', 'تم تعديل الباقة بنجاح');

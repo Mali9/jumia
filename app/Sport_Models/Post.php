@@ -3,7 +3,7 @@
 namespace App\Sport_Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use DB;
 class Post extends Model
 {
     public $timestamps = false;
@@ -52,17 +52,33 @@ class Post extends Model
     {
         $image_mime_types = array(
             'image/jpeg',
+            'image/jpg',
             'image/gif',
             'image/png',
             'image/bmp',
             'image/tiff',
             'image/x-icon'
         );
-        return $this
-            ->where('post_parent', $this->ID)
-            ->where('post_type', 'attachment')
-            ->whereIn('post_mime_type', $image_mime_types)
-            ->first()->guid ?? '';
+            if ($this->post_type == 'attachment') {
+
+            return $this
+                ->where('post_parent', $this->ID)
+                ->where('post_type', 'attachment')
+                ->whereIn('post_mime_type', $image_mime_types)
+                ->first()->guid ?? '';
+        } else {
+
+            $post_id =  DB::connection('mysql_sport')->table('spwp_postmeta')
+                ->where('post_id', $this->ID)
+                ->where('meta_key', '_thumbnail_id')
+                ->first()
+                ->meta_value ?? '';
+
+
+            return $this
+                ->where('ID', $post_id)
+                ->first()->guid ?? '';
+        }
     }
 
     public function scopePublish()

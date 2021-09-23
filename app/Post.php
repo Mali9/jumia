@@ -69,6 +69,7 @@ class Post extends Model
     {
         $image_mime_types = array(
             'image/jpeg',
+            'image/jpg',
             'image/gif',
             'image/png',
             'image/bmp',

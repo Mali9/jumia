@@ -72,7 +72,8 @@ class PostController extends Controller
                 ->whereDate('expired_at', '>=', Carbon::now()->format('Y-m-d'))
                 ->count();
 
-            if ($user_subscribe > 0 ||  (auth()->guard('api')->user()->staff === 1 && auth()->guard('api')->user()->status === 1)) {
+            if ( Carbon::now('Asia/Riyadh')->diffInHours($post->post_date) < $this->browsing_duration() || 
+                $user_subscribe > 0 ||  (auth()->guard('api')->user()->staff === 1 && auth()->guard('api')->user()->status === 1)) {
                 return response()->json(['data' => $post], 200);
             } else {
                 return response()->json(['data' => 'عفوا يجب عليك الإشتراك في أحدى الباقات'], 403);

@@ -118,7 +118,17 @@
         </div>
     </div>
 
+    <div class="form-group">
 
+        <label>
+            <div class="icheckbox_flat-green disabled" aria-checked="false" aria-disabled="true"
+                style="position: relative;">
+            </div>
+
+            <input type="checkbox" name="favourit" {{$package->favourit ? 'checked' : ''}}>
+            مفضلة
+        </label>
+    </div>
 </div>
 
 

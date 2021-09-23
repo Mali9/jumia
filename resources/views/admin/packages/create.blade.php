@@ -46,6 +46,7 @@
                         </div>
                         <!-- /. tools -->
                     </div>
+
                     <!-- /.card-header -->
                     <div class="card-body">
 
@@ -65,6 +66,7 @@
 
 
                         <div class="col-md-6 form-group mb-3">
+
                             <div class="form-group">
                                 <a href="#" class="btn btn-danger" id="btn2"> حذف </a>
 
@@ -74,6 +76,7 @@
                         </div>
                     </div>
                 </div>
+
                 {{-- 
                 <div class="form-group">
                     <label for="description" class="col-sm-2 control-label"> وصف الباقة </label>
@@ -112,6 +115,17 @@
             <div class="alert alert-danger">{{ $message }}</div>
             @enderror
         </div>
+    </div>
+    <div class="form-group">
+
+        <label>
+            <div class="icheckbox_flat-green disabled" aria-checked="false" aria-disabled="true"
+                style="position: relative;">
+            </div>
+
+            <input type="checkbox" name="favourit" {{old('favourit') ? 'checked' : ''}}>
+            مفضلة
+        </label>
     </div>
 
 

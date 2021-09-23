@@ -18,6 +18,7 @@
                         <th>الوصف</th>
                         <th>السعر</th>
                         <th>المدة بالشهر</th>
+                        <th> مفضلة</th>
 
                         <th>التحكم</th>
                         @foreach ($packages as $package)
@@ -40,6 +41,15 @@
                             <td>{{ $package->price }}</td>
 
                             <td>{{ $package->duration }}</td>
+
+                            <td>
+                                @if ($package->favourit)
+                                <span class="badge badge-success">مفضلة</span>
+                                @else
+                                <span class="badge badge-danger">غير مفضلة</span>
+                                @endif
+
+                            </td>
 
 
 
