@@ -35,7 +35,8 @@ class Comment extends Model
 
     public function replies()
     {
-        return $this->hasMany(Comment::class, 'comment_parent');
+        return $this->hasMany(Comment::class, 'comment_parent')
+            ->where('comment_approved', 1);
     }
     public function scopePublish()
     {

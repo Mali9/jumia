@@ -43,6 +43,7 @@ class Post extends Model
     {
         return $this->hasMany(Comment::class, 'comment_post_ID')
             ->where('comment_parent', 0)
+            ->where('comment_approved', 1)
             ->with('like_counter')
             ->with('dislike_counter')
             ->withCount('replies');

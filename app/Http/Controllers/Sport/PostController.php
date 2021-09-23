@@ -28,7 +28,7 @@ class PostController extends Controller
                 $query->select('post_id', 'meta_value');
             }))
             ->with(array('comments' => function ($query) {
-                $query->select('comment_ID', 'comment_post_ID', 'comment_author', 'comment_date', 'comment_content')
+                $query->select('comment_ID', 'comment_post_ID', 'comment_author', 'comment_date', 'comment_content', 'comment_approved')
                     ->withCount('replies');
             }))
             ->withCount('comments')
@@ -52,7 +52,7 @@ class PostController extends Controller
                 $query->select('post_id', 'meta_value');
             }))
             ->with(array('comments' => function ($query) {
-                $query->select('comment_ID', 'comment_post_ID', 'comment_author', 'comment_date', 'comment_content', 'user_id')
+                $query->select('comment_ID', 'comment_post_ID', 'comment_author', 'comment_date', 'comment_content', 'user_id', 'comment_approved')
                     ->withCount('replies');
             }))
             ->withCount('comments')
@@ -108,7 +108,7 @@ class PostController extends Controller
                 $query->select('post_id', 'meta_value');
             }))
             ->with(array('comments' => function ($query) {
-                $query->select('comment_ID', 'comment_post_ID', 'comment_author', 'comment_date', 'comment_content')
+                $query->select('comment_ID', 'comment_post_ID', 'comment_author', 'comment_date', 'comment_content', 'comment_approved')
                     ->withCount('replies');
             }))
             ->withCount('comments')

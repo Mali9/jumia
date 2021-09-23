@@ -29,7 +29,7 @@ class PostController extends Controller
                 $query->select('post_id', 'meta_value');
             }))
             ->with(array('comments' => function ($query) {
-                $query->select('comment_ID', 'comment_post_ID', 'comment_author', 'comment_date', 'comment_content')
+                $query->select('comment_ID', 'comment_post_ID', 'comment_author', 'comment_date', 'comment_content', 'comment_approved')
                     ->withCount('replies');
             }))
             ->withCount('comments')
@@ -51,7 +51,7 @@ class PostController extends Controller
                 $query->select('post_id', 'meta_value');
             }))
             ->with(array('comments' => function ($query) {
-                $query->select('comment_ID', 'comment_post_ID', 'comment_author', 'comment_date', 'comment_content', 'user_id')
+                $query->select('comment_ID', 'comment_post_ID', 'comment_author', 'comment_date', 'comment_content', 'user_id', 'comment_approved')
                     ->withCount('replies');
             }))
             ->withCount('comments')
@@ -69,13 +69,13 @@ class PostController extends Controller
                 ->whereDate('expired_at', '>=', Carbon::now()->format('Y-m-d'))
                 ->count();
 
-            if ( Carbon::now('Asia/Riyadh')->diffInHours($post->post_date) < $this->browsing_duration() || $user_subscribe > 0 ||  (auth()->guard('api')->user()->staff === 1 && auth()->guard('api')->user()->status === 1)) {
+            if (Carbon::now('Asia/Riyadh')->diffInHours($post->post_date) < $this->browsing_duration() || $user_subscribe > 0 ||  (auth()->guard('api')->user()->staff === 1 && auth()->guard('api')->user()->status === 1)) {
                 return response()->json(['data' => $post], 200);
             } else {
                 return response()->json(['data' => 'عفوا يجب عليك الإشتراك في أحدى الباقات'], 403);
             }
         }
-        	
+
         if (Carbon::now('Asia/Riyadh')->diffInHours($post->post_date) > $this->browsing_duration()) {
             return response()->json(['data' => 'عفوا يجب عليك الإشتراك في أحدى الباقات'], 403);
         } else {
@@ -103,7 +103,7 @@ class PostController extends Controller
                 $query->select('post_id', 'meta_value');
             }))
             ->with(array('comments' => function ($query) {
-                $query->select('comment_ID', 'comment_post_ID', 'comment_author', 'comment_date', 'comment_content')
+                $query->select('comment_ID', 'comment_post_ID', 'comment_author', 'comment_date', 'comment_content', 'comment_approved')
                     ->withCount('replies');
             }))
             ->withCount('comments')

@@ -59,6 +59,7 @@ class CommentController extends Controller
 
             $comment->comment_post_ID = $request->post_id;
             $comment->comment_content = $request->comment;
+            $comment->comment_approved = 0;
             $comment->comment_date = Carbon::now('Asia/Riyadh');
             $comment->comment_date_gmt = Carbon::now('Asia/Riyadh');
 
@@ -75,6 +76,8 @@ class CommentController extends Controller
             $comment->comment_post_ID = $request->post_id;
             $comment->comment_content = $request->comment;
             $comment->comment_author = $request->username;
+            $comment->comment_approved = 0;
+
             $comment->comment_date_gmt = Carbon::now('Asia/Riyadh');
 
             $comment->comment_date = Carbon::now('Asia/Riyadh');
@@ -122,6 +125,8 @@ class CommentController extends Controller
             $comment->comment_post_ID = $request->post_id;
             $comment->comment_content = $request->comment;
             $comment->comment_parent = $request->comment_id;
+            $comment->comment_approved = 0;
+
             $comment->comment_date = Carbon::now('Asia/Riyadh');
             $comment->comment_date_gmt = Carbon::now('Asia/Riyadh');
 
@@ -137,6 +142,8 @@ class CommentController extends Controller
             $comment->comment_post_ID = $request->post_id;
             $comment->comment_content = $request->comment;
             $comment->comment_author = $request->username;
+            $comment->comment_approved = 0;
+
             $comment->comment_date_gmt = Carbon::now('Asia/Riyadh');
             $comment->comment_parent = $request->comment_id;
 
