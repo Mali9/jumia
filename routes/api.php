@@ -97,6 +97,7 @@ Route::post('/get_result/{package_id}/{user_id}', 'PackageController@getPaymentR
 Route::group(
     ['middleware' => 'auth:api'],
     function () {
+        Route::get('subscription', 'PackageController@userSubscription');
 
         Route::get('/payment', 'PackageController@payment');
 

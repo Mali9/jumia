@@ -262,8 +262,7 @@ class CommentController extends Controller
                 'meta_value' => 1
             ]);
 
-        return response()->json(['message' => 'شكرا لك على ملاحظاتك سوف ننظر في الأمر
-        '], 200);
+        return response()->json(['message' => ' شكرا لك على ملاحظاتك سوف ننظر في الأمر '], 200);
     }
 
     public function disLikeComment(Request $request)
