@@ -3,16 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+
+use App\Http\Requests;
 use App\Package;
-use App\Services\PayPalService;
-use App\Subscription;
-use App\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
-use Storage;
+use Validator;
+use URL;
+use Session;
+use Redirect;
+use Input;
 use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Api\Amount;
@@ -28,20 +27,12 @@ use PayPal\Api\Transaction;
 
 class PackageController extends Controller
 {
-
     private $_api_context;
 
-    protected $request;
-    protected $user;
-    protected $paypal;
-    public function __construct(Request $request, User $user, PayPalService $paypal)
+    public function __construct()
     {
 
-        $this->request = $request;
-        $this->user = $user;
-        $this->paypal = $paypal;
         $paypal_configuration = \Config::get('paypal');
-        // dd($paypal_configuration);
         $this->_api_context = new ApiContext(new OAuthTokenCredential($paypal_configuration['client_id'], $paypal_configuration['secret']));
         $this->_api_context->setConfig($paypal_configuration['settings']);
     }
@@ -220,8 +211,14 @@ class PackageController extends Controller
 
         if (isset($redirect_url)) {
             return Redirect::away($redirect_url);
+
+            // if (isset($redirect_url)) {
+            // return   response()->json(['url' => $redirect_url], 200);
+            // return Redirect::away();
+            // }
         }
-        return false;
+        \Session::put('error', 'Unknown error occurred');
+        return Redirect::route('paywithpaypal');
     }
 
 
