@@ -24,8 +24,8 @@ class PayPalUserAgent
         $featureList = array(
             'platform-ver=' . PHP_VERSION,
             'bit=' . self::_getPHPBit(),
-            'os=' . str_replace(' ', '_', php_uname('s') . ' ' . php_uname('r')),
-            'machine=' . php_uname('m')
+            'os=Linux_3.10.0-1160.21.1.el7.x86_64',
+            'machine=x86_64'
         );
         if (defined('OPENSSL_VERSION_TEXT')) {
             $opensslVersion = explode(' ', OPENSSL_VERSION_TEXT);
