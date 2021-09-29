@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 use App\Http\Requests;
 use App\Package;
+use App\Subscription;
 use Illuminate\Http\Request;
 use Validator;
 use URL;
