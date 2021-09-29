@@ -1,3 +1,4 @@
+محمد علي, [20.06.21 17:33]
 <?php
 
 use Illuminate\Support\Str;
@@ -44,9 +45,21 @@ return [
         ],
 
         'mysql' => [
+            'read' => [
+                'host' => [
+                    'localhost',
+                ],
+            ],
+            'write' => [
+                'host' => [
+                    '192.168.5.6',
+                ],
+            ],
+            'sticky' => true,
+
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
+            // 'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'forge'),
             'username' => env('DB_USERNAME', 'forge'),
@@ -64,9 +77,21 @@ return [
         ],
 
         'mysql_new' => [
+            'read' => [
+                'host' => [
+                    'localhost',
+                ],
+            ],
+            'write' => [
+                'host' => [
+                    '192.168.5.6',
+                ],
+            ],
+            'sticky' => false,
+
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST_NEW', '127.0.0.1'),
+            // 'host' => env('DB_HOST_NEW', '127.0.0.1'),
             'port' => env('DB_PORT_NEW', '3306'),
             'database' => env('DB_DATABASE_NEW', 'forge'),
             'username' => env('DB_USERNAME_NEW', 'forge'),
@@ -83,9 +108,22 @@ return [
             ]) : [],
         ],
         'mysql_sport' => [
+            'read' => [
+                'host' => [
+                    'localhost',
+                ],
+            ],
+            'write' => [
+                'host' => [
+                    '192.168.5.6',
+                ],
+            ],
+            'sticky' => false,
+
+
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST_SPORT', '127.0.0.1'),
+            // 'host' => env('DB_HOST_SPORT', '127.0.0.1'),
             'port' => env('DB_PORT_SPORT', '3306'),
             'database' => env('DB_DATABASE_SPORT', 'forge'),
             'username' => env('DB_USERNAME_SPORT', 'forge'),
@@ -137,7 +175,7 @@ return [
     | Migration Repository Table
     |--------------------------------------------------------------------------
     |
-    | This table keeps track of all the migrations that have already run for
+    | This table keeps track of all the migrations that have al`read`y run for
     | your application. Using this information, we can determine which of
     | the migrations on disk haven't actually been run in the database.
     |
