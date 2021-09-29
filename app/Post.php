@@ -14,7 +14,7 @@ class Post extends Model
     protected $primaryKey = 'ID';
     protected $table = 'wp_posts';
 
-    protected $appends = ['views', 'featured_image'];
+    protected $appends = ['views', 'featured_image', 'ago'];
 
 
 
@@ -93,5 +93,10 @@ class Post extends Model
     public function author()
     {
         return $this->belongsTo(NewsUser::class, 'post_author', 'ID');
+    }
+    public function getAgoAttribute()
+    {
+        \Carbon\Carbon::setLocale('ar');
+        return \Carbon\Carbon::createFromTimeStamp(strtotime($this->post_date))->diffForHumans();
     }
 }

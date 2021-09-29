@@ -2,8 +2,10 @@
 
 namespace App\Sport_Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use DB;
+
 class Post extends Model
 {
     public $timestamps = false;
@@ -12,7 +14,7 @@ class Post extends Model
     protected $primaryKey = 'ID';
     protected $table = 'spwp_posts';
 
-    protected $appends = ['views', 'featured_image'];
+    protected $appends = ['views', 'featured_image', 'ago'];
 
 
 
@@ -50,6 +52,13 @@ class Post extends Model
         return $this->view->meta_value ?? '';
     }
 
+
+    public function getAgoAttribute()
+    {
+        \Carbon\Carbon::setLocale('ar');
+        return \Carbon\Carbon::createFromTimeStamp(strtotime($this->post_date))->diffForHumans();
+    }
+
     public function getFeaturedImageAttribute()
     {
         $image_mime_types = array(
@@ -61,7 +70,7 @@ class Post extends Model
             'image/tiff',
             'image/x-icon'
         );
-            if ($this->post_type == 'attachment') {
+        if ($this->post_type == 'attachment') {
 
             return $this
                 ->where('post_parent', $this->ID)
