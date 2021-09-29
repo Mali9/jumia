@@ -14,7 +14,7 @@ class Post extends Model
     protected $primaryKey = 'ID';
     protected $table = 'wp_posts';
 
-    protected $appends = ['views', 'featured_image', 'ago'];
+    protected $appends = ['views', 'featured_image','ago'];
 
 
 
